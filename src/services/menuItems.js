@@ -2,7 +2,10 @@ import { supabase } from "./api";
 
 export const getMenuItems = async () => {
   try {
-    const { data, error } = await supabase.from("menuItems").select("*");
+    const { data, error } = await supabase
+      .from("menuItems")
+      .select("*")
+      .order("id", { ascending: true });
 
     if (error) {
       console.error("خطا در دریافت آیتم‌های منو:", error);
