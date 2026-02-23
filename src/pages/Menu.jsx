@@ -11,3 +11,9 @@ function Menu() {
 }
 
 export default Menu;
+
+// create the ui and logic for the menuItems data in this rouote ..
+
+// create the pages of the data in this route and use navgation and pagination for shoowing data like the wild oasis project .
+
+// figure out the way to upload the images with theh lower quality for performance .

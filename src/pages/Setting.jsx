@@ -113,3 +113,7 @@ function Setting() {
 }
 
 export default Setting;
+
+// you have to create input media files for the images of this setting data and write the logic for the change the images .
+
+// use have to write the logic for the mutation the setting data with the mutation on react query .
