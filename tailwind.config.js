@@ -10,7 +10,7 @@ export default {
         coffee: {
           light: "#E5C89E",
           DEFAULT: "#AB7F52",
-          dark: "#270400",
+          dark: "#4A1410",
         },
       },
     },

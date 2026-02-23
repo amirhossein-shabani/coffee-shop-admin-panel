@@ -45,6 +45,14 @@ function Sidebar() {
             🗂️ کتگوری ها
           </NavLink>
           <NavLink
+            to="/setting"
+            className={({ isActive }) =>
+              ` block p-3 rounded transition ${isActive ? "bg-coffee text-white font-bold" : "hover:bg-coffee/80"}`
+            }
+          >
+            ⚙️ تنظیمات
+          </NavLink>
+          <NavLink
             to="/users"
             className={({ isActive }) =>
               ` block p-3 rounded transition ${isActive ? "bg-coffee text-white font-bold" : "hover:bg-coffee/80"}`
