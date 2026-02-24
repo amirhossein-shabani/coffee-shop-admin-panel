@@ -17,3 +17,15 @@ export const getMenuItems = async () => {
     throw err;
   }
 };
+
+export const getMenuItemById = async (id) => {
+  const { data, error } = await supabase
+    .from("menuItems")
+    .select("*")
+    .eq("id", id)
+    .single();
+
+  if (error) throw error;
+
+  return data;
+};

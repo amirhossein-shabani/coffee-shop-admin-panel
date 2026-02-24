@@ -1,3 +1,4 @@
+import { Outlet, useNavigate } from "react-router-dom";
 import { useState, useMemo } from "react";
 import { FiEdit } from "react-icons/fi";
 import { MdDelete } from "react-icons/md";
@@ -8,6 +9,8 @@ import MenuLoading from "../components/MenuLoading";
 function Menu() {
   const { data, isLoading, error } = useMenuItems();
   const [searchTerm, setSearchTerm] = useState("");
+
+  const navigate = useNavigate();
 
   // فیلتر بهینه شده با useMemo
   const filteredData = useMemo(() => {
@@ -63,7 +66,7 @@ function Menu() {
 
               <div className="flex text-xl gap-x-2">
                 <button
-                  onClick={() => console.log("edit item :", item)}
+                  onClick={() => navigate(`/menu/${item.id}`)}
                   className="transition hover:text-green-500"
                 >
                   <FiEdit />
@@ -81,6 +84,7 @@ function Menu() {
           </div>
         )}
       </div>
+      <Outlet />
     </div>
   );
 }
