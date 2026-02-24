@@ -28,7 +28,7 @@ function Modal({ isOpen, onClose, children }) {
       />
 
       {/* Modal Content */}
-      <div className="relative z-10 w-[90%] max-w-lg p-6 bg-white shadow-xl rounded-2xl animate-scaleIn">
+      <div className="relative z-10 w-[90%] max-w-lg p-3 bg-white shadow-xl rounded-2xl animate-scaleIn">
         {children}
       </div>
     </div>,

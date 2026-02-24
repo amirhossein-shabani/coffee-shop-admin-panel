@@ -53,7 +53,7 @@ function Menu() {
 
                   <div className="flex flex-col justify-between w-full pt-1">
                     <p className="text-sm">{item.name}</p>
-                    <p className="w-fit">{item.price} تومان</p>
+                    <p className="text-sm w-fit">{item.price} تومان</p>
                   </div>
                 </div>
 
