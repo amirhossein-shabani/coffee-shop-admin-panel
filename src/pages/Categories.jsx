@@ -1,12 +1,12 @@
+import { MdDelete } from "react-icons/md";
 import { useCategoies } from "../hooks/useCategories";
+import CategoriesLoading from "../components/CategoriesLoading";
 
 function Categories() {
   const { data, isLoading, error } = useCategoies();
 
-  if (isLoading) return <div>در حال بارگذاری...</div>;
+  if (isLoading) return <CategoriesLoading />;
   if (error) return <div>خطا در بارگذاری دسته‌بندی‌ها: {error.message}</div>;
-
-  console.log(data);
 
   return (
     <div className="p-8 space-y-4">
@@ -16,27 +16,35 @@ function Categories() {
       <div className="grid grid-cols-2 gap-4">
         {data?.map((category) => (
           <div
+            onClick={() => console.log(category)}
             key={category.id}
-            className="relative flex items-center justify-between p-4 transition bg-white shadow rounded-xl hover:scale-[1.02] hover:shadow-md hover:text-gray-900"
+            className="relative group flex items-center justify-between p-4 transition bg-white shadow rounded-xl hover:scale-[1.02] hover:shadow-md"
           >
-            {/* this is ui writ now and you have to write the logic later  */}
-            <button className="absolute p-1 text-xs transition top-1 left-1 hover:scale-[1.02]">
-              ❌
+            {/* دکمه حذف */}
+            <button className="absolute z-20 p-1 text-xs text-gray-500 transition top-1 left-1 hover:text-red-500">
+              <MdDelete size={18} />
             </button>
 
-            {/* متن دسته‌بندی */}
+            {/* متن */}
             <div>
-              <h2 className="text-sm font-semibold text-gray-700 ">
+              <h2 className="text-sm font-semibold text-gray-700">
                 {category.categoryTitle}
               </h2>
             </div>
 
-            {/* تصویر دسته‌بندی */}
+            {/* تصویر */}
             <img
-              src={category.imgUrl} // درست شد
+              src={category.imgUrl}
               alt={category.categoryTitle}
-              className="object-contain w-16 h-16 ml-2 rounded-lg"
+              className="object-contain w-16 h-16 ml-4 rounded-lg"
             />
+
+            {/* Glass Hover Overlay */}
+            <div className="absolute inset-0 flex items-center justify-center transition duration-300 opacity-0 bg-white/10 backdrop-blur-sm rounded-xl group-hover:opacity-100 ">
+              <span className="px-4 py-2 text-sm font-semibold text-white rounded-lg bg-black/60">
+                ویرایش
+              </span>
+            </div>
           </div>
         ))}
         {/* this is ui writ now and you have to write the logic later  */}

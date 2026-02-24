@@ -52,14 +52,14 @@ function Sidebar() {
           >
             ⚙️ تنظیمات
           </NavLink>
-          <NavLink
+          {/* <NavLink
             to="/users"
             className={({ isActive }) =>
               ` block p-3 rounded transition ${isActive ? "bg-coffee text-white font-bold" : "hover:bg-coffee/80"}`
             }
           >
             👥 کاربر ها
-          </NavLink>
+          </NavLink> */}
         </nav>
       </div>
       <button className="w-full p-3 mt-auto text-right rounded hover:bg-coffee/80">

@@ -3,6 +3,7 @@ import { FiEdit } from "react-icons/fi";
 import { MdDelete } from "react-icons/md";
 import { useMenuItems } from "../hooks/useMenuItems";
 import SearchBar from "../components/SearchBar";
+import MenuLoading from "../components/MenuLoading";
 
 function Menu() {
   const { data, isLoading, error } = useMenuItems();
@@ -15,7 +16,7 @@ function Menu() {
     );
   }, [data, searchTerm]);
 
-  if (isLoading) return <div>در حال بارگذاری...</div>;
+  if (isLoading) return <MenuLoading />;
   if (error) return <div>خطا در بارگذاری آیتم‌های منو: {error.message}</div>;
 
   return (

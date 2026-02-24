@@ -48,12 +48,12 @@ export const router = createBrowserRouter([
       </Layout>
     ),
   },
-  {
-    path: "/users",
-    element: (
-      <Layout>
-        <Users />
-      </Layout>
-    ),
-  },
+  // {
+  //   path: "/users",
+  //   element: (
+  //     <Layout>
+  //       <Users />
+  //     </Layout>
+  //   ),
+  // },
 ]);

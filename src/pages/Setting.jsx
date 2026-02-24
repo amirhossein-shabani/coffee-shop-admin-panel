@@ -2,6 +2,7 @@ import { useForm } from "react-hook-form";
 import { useSetting } from "../hooks/useSetting";
 import { useEffect } from "react";
 import FormButton from "../components/FormButton";
+import SettingsLoading from "../components/SettingLoading";
 
 function Setting() {
   const { data, isLoading, error } = useSetting();
@@ -18,7 +19,7 @@ function Setting() {
     }
   }, [data, reset]);
 
-  if (isLoading) return <div>در حال بارگذاری...</div>;
+  if (isLoading) return <SettingsLoading />;
   if (error) return <div>خطا در بارگذاری دسته‌بندی‌ها: {error.message}</div>;
 
   function onSubmit(formData) {
