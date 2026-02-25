@@ -1,9 +1,11 @@
 import { MdDelete } from "react-icons/md";
+import { useNavigate, Outlet } from "react-router-dom";
 import { useCategoies } from "../hooks/useCategories";
 import CategoriesLoading from "../components/CategoriesLoading";
 
 function Categories() {
   const { data, isLoading, error } = useCategoies();
+  const navigate = useNavigate();
 
   if (isLoading) return <CategoriesLoading />;
   if (error) return <div>خطا در بارگذاری دسته‌بندی‌ها: {error.message}</div>;
@@ -16,7 +18,7 @@ function Categories() {
       <div className="grid grid-cols-2 gap-4">
         {data?.map((category) => (
           <div
-            onClick={() => console.log(category)}
+            onClick={() => navigate(`/categories/${category.href}`)}
             key={category.id}
             className="relative group flex items-center justify-between p-4 transition bg-white shadow rounded-xl hover:scale-[1.02] hover:shadow-md"
           >
@@ -49,10 +51,14 @@ function Categories() {
         ))}
         {/* this is ui writ now and you have to write the logic later  */}
 
-        <button className="col-span-2 py-2 text-center text-gray-800 border border-gray-400 border-dotted rounded-lg bg-white/50 hover:bg-white hover:text-black hover:scale-[1.02] transition duration-300">
+        <button
+          onClick={() => navigate("/categories/add")}
+          className="col-span-2 py-2 text-center text-gray-800 border border-gray-400 border-dotted rounded-lg bg-white/50 hover:bg-white hover:text-black hover:scale-[1.02] transition duration-300"
+        >
           اضاف کردن کتگوری <span className="text-xl"> + </span>
         </button>
       </div>
+      <Outlet />
     </div>
   );
 }

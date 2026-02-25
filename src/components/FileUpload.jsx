@@ -4,6 +4,7 @@ import { IoClose } from "react-icons/io5";
 
 function FileUpload({ label, register, name, defaultImage }) {
   const [preview, setPreview] = useState(defaultImage || null);
+  const { onChange, ...restRegister } = register(name);
 
   useEffect(() => {
     return () => {
@@ -19,9 +20,11 @@ function FileUpload({ label, register, name, defaultImage }) {
         type="file"
         accept="image/*"
         id={name}
-        {...register(name)}
+        {...restRegister}
         className="hidden"
         onChange={(e) => {
+          onChange(e);
+
           const file = e.target.files?.[0];
           if (file) {
             setPreview(URL.createObjectURL(file));

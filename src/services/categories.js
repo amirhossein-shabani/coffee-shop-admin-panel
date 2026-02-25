@@ -41,6 +41,27 @@ export const getCategoryById = async (id) => {
   }
 };
 
+// دریافت یک دسته‌بندی با href
+export const getCategoryByHref = async (href) => {
+  try {
+    const { data, error } = await supabase
+      .from("categories")
+      .select("*")
+      .eq("href", href)
+      .single();
+
+    if (error) {
+      console.error("خطا در دریافت دسته‌بندی:", error);
+      throw error;
+    }
+
+    return data;
+  } catch (err) {
+    console.error("خطای غیرمنتظره:", err);
+    throw err;
+  }
+};
+
 // ۳️⃣ اضافه کردن دسته‌بندی جدید
 export const createCategory = async (categoryData) => {
   try {

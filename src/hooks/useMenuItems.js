@@ -13,7 +13,7 @@ export function useMenuItem(id) {
   return useQuery({
     queryKey: ["menuItem", id],
     queryFn: () => getMenuItemById(id),
-    // optional:
-    staleTime: 0, // 1 دقیقه
+    enabled: !!id,
+    staleTime: 0,
   });
 }

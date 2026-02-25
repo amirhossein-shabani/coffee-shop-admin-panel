@@ -5,6 +5,7 @@ import { MdDelete } from "react-icons/md";
 import { useMenuItems } from "../hooks/useMenuItems";
 import SearchBar from "../components/SearchBar";
 import MenuLoading from "../components/MenuLoading";
+import AddItemButton from "../components/AddItemButton";
 
 function Menu() {
   const { data, isLoading, error } = useMenuItems();
@@ -28,11 +29,14 @@ function Menu() {
         صفحه منو
       </h1>
 
-      <SearchBar
-        value={searchTerm}
-        onSearch={setSearchTerm}
-        placeholder="جستجو آیتم..."
-      />
+      <div className="flex flex-row ">
+        <SearchBar
+          value={searchTerm}
+          onSearch={setSearchTerm}
+          placeholder="جستجو آیتم..."
+        />
+        <AddItemButton navigate={() => navigate("/menu/add")} />
+      </div>
 
       <div className="flex flex-col gap-2 pb-10 pl-2 scroll-container">
         {filteredData?.length > 0 ? (

@@ -7,9 +7,10 @@ import Layout from "../components/Layout";
 const Dashboard = lazy(() => import("../pages/Dashboard"));
 const Login = lazy(() => import("../pages/Login"));
 const Menu = lazy(() => import("../pages/Menu"));
-const MenuItemDetail = lazy(() => import("../pages/MenuItemDetail"));
 const Categories = lazy(() => import("../pages/Categories"));
 const Setting = lazy(() => import("../pages/Setting"));
+const AddEditItem = lazy(() => import("../pages/AddEditItem"));
+const AddEditCategory = lazy(() => import("../components/AddEditCategory"));
 
 export const router = createBrowserRouter([
   {
@@ -30,13 +31,27 @@ export const router = createBrowserRouter([
         children: [
           {
             path: ":id",
-            element: <MenuItemDetail />,
+            element: <AddEditItem />,
+          },
+          {
+            path: "add",
+            element: <AddEditItem />,
           },
         ],
       },
       {
         path: "categories",
         element: <Categories />,
+        children: [
+          {
+            path: ":href",
+            element: <AddEditCategory />,
+          },
+          {
+            path: "add",
+            element: <AddEditCategory />,
+          },
+        ],
       },
       {
         path: "setting",
