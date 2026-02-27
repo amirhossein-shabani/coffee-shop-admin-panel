@@ -24,7 +24,7 @@ function Menu() {
   if (error) return <div>خطا در بارگذاری آیتم‌های منو: {error.message}</div>;
 
   return (
-    <div className="p-8 space-y-4">
+    <div className="space-y-4 ">
       <h1 className="pb-5 pr-1 text-xl font-bold text-coffee-dark/80">
         صفحه منو
       </h1>

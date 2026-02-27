@@ -11,7 +11,7 @@ function Categories() {
   if (error) return <div>خطا در بارگذاری دسته‌بندی‌ها: {error.message}</div>;
 
   return (
-    <div className="p-8 space-y-4">
+    <div className="space-y-4">
       <h1 className="pb-5 pr-1 text-xl font-bold text-coffee-dark/80">
         صفحه دسته‌بندی‌ها
       </h1>
@@ -23,7 +23,10 @@ function Categories() {
             className="relative group flex items-center justify-between p-4 transition bg-white shadow rounded-xl hover:scale-[1.02] hover:shadow-md"
           >
             {/* دکمه حذف */}
-            <button className="absolute z-20 p-1 text-xs text-gray-500 transition top-1 left-1 hover:text-red-500">
+            <button
+              onClick={(e) => e.stopPropagation()}
+              className="absolute z-20 p-1 text-xs text-gray-500 transition top-1 left-1 hover:text-red-500"
+            >
               <MdDelete size={18} />
             </button>
 
@@ -38,7 +41,7 @@ function Categories() {
             <img
               src={category.imgUrl}
               alt={category.categoryTitle}
-              className="object-contain w-16 h-16 ml-4 rounded-lg"
+              className="object-contain w-24 h-24 ml-4 scale-150 rounded-lg"
             />
 
             {/* Glass Hover Overlay */}

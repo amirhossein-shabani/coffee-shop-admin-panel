@@ -4,7 +4,7 @@ function Sidebar() {
   return (
     <aside
       dir="rtl"
-      className="flex flex-col w-48 h-screen p-6 text-coffee-light bg-coffee-dark"
+      className="flex flex-col w-48 h-screen p-6  text-coffee-light bg-coffee-dark"
     >
       <div>
         <h1 className="mb-8 text-2xl font-bold text-coffee-light">

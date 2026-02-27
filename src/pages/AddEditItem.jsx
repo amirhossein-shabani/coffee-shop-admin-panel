@@ -1,8 +1,8 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { useMenuItem } from "../hooks/useMenuItems";
+import { useMenuItem, useUpdateMenuItemWithImage } from "../hooks/useMenuItems";
 import Modal from "../components/Modal";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import FileUpload from "../components/FileUpload";
 import { FormInput } from "../components/FormInput";
 import { FormTextarea } from "../components/FormTextarea";
@@ -11,25 +11,49 @@ function AddEditItem() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { data: item, isLoading, error } = useMenuItem(Number(id));
+  console.log(item);
+  const { mutate: updateItem, isPending } = useUpdateMenuItemWithImage({
+    onSuccess: () => {
+      navigate("/menu");
+    },
+  });
+  const itemId = Number(id);
 
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
-  } = useForm({
-    values: item
-      ? {
-          name: item.name,
-          description: item.description,
-          price: item.price,
-        }
-      : {},
-  });
+  } = useForm();
 
   const [preview, setPreview] = useState(null);
 
-  const onSubmit = (data) => {
-    console.log("فرم ارسال شد:", data);
+  useEffect(() => {
+    if (item) {
+      reset({
+        name: item.name,
+        description: item.description,
+        price: item.price,
+      });
+      setTimeout(() => setPreview(null), 0);
+    }
+  }, [item, reset]);
+
+  const onSubmit = (formData) => {
+    const imageFile = formData.imgUrl?.[0]; // فایل جدید، اگر انتخاب شده
+    const oldImageUrl = item?.imgUrl || null; // کل URL فعلی از دیتابیس
+
+    const updatePayload = {
+      ...formData,
+      imgUrl: item?.imgUrl, // اگر عکس جدید نیست، همون قبلی باشه
+    };
+
+    updateItem({
+      id: itemId,
+      updateData: updatePayload,
+      imageFile: imageFile,
+      oldImageUrl: oldImageUrl, // اینو درست پاس بده
+    });
   };
 
   if (isLoading)
@@ -101,8 +125,9 @@ function AddEditItem() {
           <FileUpload
             label="تصویر محصول"
             register={register}
-            name="image"
+            name="imgUrl"
             defaultImage={item?.imgUrl}
+            onPreviewChange={setPreview}
           />
 
           {/* Buttons */}
@@ -119,7 +144,7 @@ function AddEditItem() {
               type="submit"
               className="px-4 py-2 text-white rounded-lg bg-coffee-dark hover:opacity-90"
             >
-              ذخیره
+              {isPending ? "درحال خیره ..." : "ذخیره"}
             </button>
           </div>
         </form>
@@ -134,3 +159,5 @@ export default AddEditItem;
 // write the logic for mutation the daat
 // responsive this modal for the phone
 // error fixing : when the uploadfile don't have any item and try to save the edit and can't save after that if the user chose new img file don't show that to user in the edit form ui .
+
+// the update without the img change done and know fix the img change accessebility and work on the add item and delete item section .

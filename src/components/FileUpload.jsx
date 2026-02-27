@@ -2,15 +2,20 @@ import { useEffect, useState } from "react";
 import { HiOutlineUpload } from "react-icons/hi";
 import { IoClose } from "react-icons/io5";
 
-function FileUpload({ label, register, name, defaultImage }) {
+function FileUpload({ label, register, name, defaultImage, onPreviewChange }) {
   const [preview, setPreview] = useState(defaultImage || null);
   const { onChange, ...restRegister } = register(name);
 
   useEffect(() => {
     return () => {
-      if (preview) URL.revokeObjectURL(preview);
+      if (preview && !defaultImage) URL.revokeObjectURL(preview);
     };
-  }, [preview]);
+  }, [preview, defaultImage]);
+
+  const handlePreviewChange = (newPreview) => {
+    setPreview(newPreview);
+    onPreviewChange?.(newPreview);
+  };
 
   return (
     <div className="space-y-2 ">
@@ -27,7 +32,7 @@ function FileUpload({ label, register, name, defaultImage }) {
 
           const file = e.target.files?.[0];
           if (file) {
-            setPreview(URL.createObjectURL(file));
+            handlePreviewChange(URL.createObjectURL(file));
           }
         }}
       />
@@ -56,7 +61,7 @@ function FileUpload({ label, register, name, defaultImage }) {
               type="button"
               onClick={(e) => {
                 e.preventDefault();
-                setPreview(null);
+                handlePreviewChange(null);
               }}
               className="absolute flex items-center justify-center text-white bg-red-500 rounded-full w-7 h-7 top-2 right-2 hover:bg-red-600"
             >
