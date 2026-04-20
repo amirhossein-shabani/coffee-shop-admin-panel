@@ -1,10 +1,10 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { useCategory } from "../hooks/useCategories";
-import Modal from "./Modal";
+import Modal from "../components/Modal";
 import { useState } from "react";
-import FileUpload from "./FileUpload";
-import { FormInput } from "./FormInput";
+import FileUpload from "../components/FileUpload";
+import { FormInput } from "../components/FormInput";
 
 function AddEditCategory() {
   const { href } = useParams();

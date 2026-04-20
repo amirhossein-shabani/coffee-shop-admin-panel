@@ -10,6 +10,7 @@ import { FormTextarea } from "../components/FormTextarea";
 function AddEditItem() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const [preview, setPreview] = useState(null);
   const { data: item, isLoading, error } = useMenuItem(Number(id));
   console.log(item);
   const { mutate: updateItem, isPending } = useUpdateMenuItemWithImage({
@@ -25,8 +26,6 @@ function AddEditItem() {
     reset,
     formState: { errors },
   } = useForm();
-
-  const [preview, setPreview] = useState(null);
 
   useEffect(() => {
     if (item) {

@@ -10,7 +10,7 @@ const Menu = lazy(() => import("../pages/Menu"));
 const Categories = lazy(() => import("../pages/Categories"));
 const Setting = lazy(() => import("../pages/Setting"));
 const AddEditItem = lazy(() => import("../pages/AddEditItem"));
-const AddEditCategory = lazy(() => import("../components/AddEditCategory"));
+const AddEditCategory = lazy(() => import("../pages/AddEditCategory"));
 
 export const router = createBrowserRouter([
   {
