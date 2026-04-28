@@ -2,35 +2,47 @@ import { supabase } from "./api";
 
 const BUCKET_NAME = "categorie-images";
 
+/* ========================== */
+/* گرفتن public URL کامل     */
+/* ========================== */
 const getPublicUrl = (filePath) => {
   const { data } = supabase.storage.from(BUCKET_NAME).getPublicUrl(filePath);
-
   return data.publicUrl;
 };
 
-// extarct filePath from the public url
+/* ========================== */
+/* استخراج filePath از URL (FIXED) */
+/* ========================== */
 const extractFilePath = (url) => {
   if (!url) return null;
 
-  const marker = `/storage/v1/object/public/${BUCKET_NAME}/`;
-  const parts = url.split(marker);
-  console.log(parts);
+  try {
+    const urlObj = new URL(url);
+    const path = urlObj.pathname;
 
-  return parts.length > 1 ? parts[1] : null;
+    // فقط اسم فایل داخل bucket
+    const filePath = path.split(`/${BUCKET_NAME}/`)[1];
+
+    return filePath || null;
+  } catch {
+    return null;
+  }
 };
 
-// Update category image
-export const updateCategoryImage = async (file, categoryHref) => {
+/* ========================== */
+/* آپلود تصویر               */
+/* ========================== */
+export const updateCategoryImage = async (file, categoryId) => {
   try {
     const fileExtension = file.name.split(".").pop();
-    console.log(fileExtension);
-    const fileName = `${categoryHref}-${Date.now()}.${fileExtension}`;
+    const fileName = `${categoryId}-${Date.now()}.${fileExtension}`;
 
     const { error } = await supabase.storage
       .from(BUCKET_NAME)
       .upload(fileName, file, {
         upsert: false,
       });
+
     if (error) {
       console.error("خطا در آپلود تصویر دسته‌بندی:", error);
       throw error;
@@ -38,17 +50,24 @@ export const updateCategoryImage = async (file, categoryHref) => {
 
     return getPublicUrl(fileName);
   } catch (err) {
-    console.log("خطای آپلود تصویر", err);
+    console.error("خطای آپلود تصویر", err);
     throw err;
   }
 };
 
-// Delete category image
+/* ========================== */
+/* حذف تصویر (FIXED + LOG)   */
+/* ========================== */
 export const deleteCategoryImage = async (imageUrl) => {
   try {
     if (!imageUrl) return;
 
     const filePath = extractFilePath(imageUrl);
+
+    console.log("DELETE IMAGE:");
+    console.log("URL:", imageUrl);
+    console.log("PATH:", filePath);
+
     if (!filePath) return;
 
     const { error } = await supabase.storage
@@ -56,107 +75,117 @@ export const deleteCategoryImage = async (imageUrl) => {
       .remove([filePath]);
 
     if (error) {
-      console.log("خطا در حذف تصویر ", error);
+      console.error("خطا در حذف تصویر ", error);
       throw error;
     }
   } catch (err) {
-    console.log("خطای حذف تصویر", err);
+    console.error("خطای حذف تصویر", err);
     throw err;
   }
 };
 
+/* ========================== */
+/* گرفتن همه دسته‌بندی‌ها    */
+/* ========================== */
 export const getCategories = async () => {
-  try {
-    const { data, error } = await supabase
-      .from("categories")
-      .select("*")
-      .order("created_at", { ascending: false });
+  const { data, error } = await supabase
+    .from("categories")
+    .select("*")
+    .order("created_at", { ascending: false });
 
-    if (error) {
-      console.error("خطا در دریافت دسته‌بندی‌ها:", error);
-      throw error;
-    }
-
-    return data;
-  } catch (err) {
-    console.error("خطای غیرمنتظره:", err);
-    throw err;
+  if (error) {
+    console.error("خطا در دریافت دسته‌بندی‌ها:", error);
+    throw error;
   }
+
+  return data;
 };
 
+/* ========================== */
+/* گرفتن با id               */
+/* ========================== */
 export const getCategoryById = async (id) => {
-  try {
-    const { data, error } = await supabase
-      .from("categories")
-      .select("*")
-      .eq("id", id)
-      .single();
+  const { data, error } = await supabase
+    .from("categories")
+    .select("*")
+    .eq("id", id)
+    .single();
 
-    if (error) {
-      console.error("خطا در دریافت دسته‌بندی:", error);
-      throw error;
-    }
-
-    return data;
-  } catch (err) {
-    console.error("خطای غیرمنتظره:", err);
-    throw err;
+  if (error) {
+    console.error("خطا در دریافت دسته‌بندی:", error);
+    throw error;
   }
+
+  return data;
 };
 
+/* ========================== */
+/* گرفتن با href             */
+/* ========================== */
 export const getCategoryByHref = async (href) => {
-  try {
-    const { data, error } = await supabase
-      .from("categories")
-      .select("*")
-      .eq("href", href);
+  const { data, error } = await supabase
+    .from("categories")
+    .select("*")
+    .eq("href", href);
 
-    if (error) {
-      console.error("خطا در دریافت دسته‌بندی:", error);
-      throw error;
-    }
-
-    return data?.[0] || null;
-  } catch (err) {
-    console.error("خطای غیرمنتظره:", err);
-    throw err;
+  if (error) {
+    console.error("خطا در دریافت دسته‌بندی:", error);
+    throw error;
   }
+
+  return data?.[0] || null;
 };
 
-// update the category
+/* ========================== */
+/* آپدیت کامل (FIXED FLOW)   */
+/* ========================== */
 export const updateCategory = async ({
-  href,
+  id,
   updateCategoryData,
   imageFile,
   oldImgageUrl,
 }) => {
-  let newImageUrl = updateCategoryData.imgUrl;
-
   try {
-    // if new image is selected → upload it first
+    let newImageUrl = updateCategoryData.imgUrl;
+
+    // ✅ اگر عکس جدید داریم
     if (imageFile) {
-      newImageUrl = await updateCategoryImage(imageFile, href);
+      // 1. آپلود عکس جدید
+      newImageUrl = await updateCategoryImage(imageFile, id);
+
+      // 2. آپدیت دیتابیس با عکس جدید
+      const { data, error } = await supabase
+        .from("categories")
+        .update({ ...updateCategoryData, imgUrl: newImageUrl })
+        .eq("id", id)
+        .select()
+        .single();
+
+      if (error) {
+        // rollback
+        await deleteCategoryImage(newImageUrl);
+        throw error;
+      }
+
+      // 3. حذف عکس قبلی (بدون شرط حساس)
+      if (oldImgageUrl) {
+        await deleteCategoryImage(oldImgageUrl);
+      }
+
+      return data;
     }
 
-    // update category data in database
+    // ✅ اگر عکس جدید نداریم
     const { data, error } = await supabase
       .from("categories")
-      .update({ ...updateCategoryData, imgUrl: newImageUrl })
-      .eq("href", href)
+      .update(updateCategoryData)
+      .eq("id", id)
       .select()
       .single();
 
     if (error) {
-      // if data in the database failed we rollback the new Image which we uploaded .
-      if (imageFile) {
-        await deleteCategoryImage(newImageUrl);
-      }
+      console.error("خطا در آپدیت دسته‌بندی:", error);
       throw error;
-    }
-
-    // if everything is ok we delete the old image from the storage
-    if (imageFile && oldImgageUrl && oldImgageUrl !== newImageUrl) {
-      await deleteCategoryImage(oldImgageUrl);
     }
 
     return data;

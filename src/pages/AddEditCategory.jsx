@@ -45,7 +45,7 @@ function AddEditCategory() {
     };
 
     updateCategory({
-      href: category.href,
+      id: category.id,
       updateCategoryData: payload,
       imageFile: imageFile,
       oldImgageUrl: oldImgageUrl,
@@ -72,7 +72,7 @@ function AddEditCategory() {
         {/* Header */}
         <div className="flex items-center gap-3 mb-4">
           <img
-            src={preview || category?.imgUrl}
+            src={preview || category?.imgUrl || null}
             alt={category?.categoryTitle}
             className="object-cover border rounded-lg w-14 h-14"
           />
@@ -113,7 +113,7 @@ function AddEditCategory() {
             label="تصویر دسته‌بندی"
             register={register}
             name="imgUrl"
-            defaultImage={category?.imgUrl}
+            defaultImage={category?.imgUrl || null}
             onPreviewChange={setPreview}
           />
 

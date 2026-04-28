@@ -39,7 +39,7 @@ function Categories() {
 
             {/* تصویر */}
             <img
-              src={category.imgUrl}
+              src={category.imgUrl || null}
               alt={category.categoryTitle}
               className="object-contain w-24 h-24 ml-4 scale-150 rounded-lg"
             />
