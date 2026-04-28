@@ -1,5 +1,9 @@
-import { useQuery } from "@tanstack/react-query";
-import { getCategories, getCategoryByHref } from "../services/categories";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  getCategories,
+  getCategoryByHref,
+  updateCategory,
+} from "../services/categories";
 
 export function useCategoies() {
   return useQuery({
@@ -15,5 +19,20 @@ export function useCategory(href) {
     queryFn: () => getCategoryByHref(href),
     enabled: !!href,
     staleTime: 0,
+  });
+}
+
+export function useUpdateCategory(options = {}) {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: updateCategory,
+
+    onSuccess: (data) => {
+      // فقط این کافیه 👇
+      queryClient.invalidateQueries(["categories"]);
+
+      options.onSuccess?.(data);
+    },
   });
 }

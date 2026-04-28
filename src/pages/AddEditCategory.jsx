@@ -1,34 +1,55 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { useCategory } from "../hooks/useCategories";
+import { useCategory, useUpdateCategory } from "../hooks/useCategories";
 import Modal from "../components/Modal";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import FileUpload from "../components/FileUpload";
 import { FormInput } from "../components/FormInput";
 
 function AddEditCategory() {
   const { href } = useParams();
   const navigate = useNavigate();
+  const [preview, setPreview] = useState(null);
   const { data: category, isLoading, error } = useCategory(href);
+
+  const { mutate: updateCategory, isPending } = useUpdateCategory({
+    onSuccess: () => {
+      navigate("/categories");
+    },
+  });
 
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
-  } = useForm({
-    values: category
-      ? {
-          categoryTitle: category.categoryTitle,
-          href: category.href,
-          imgUrl: category.imgUrl,
-        }
-      : {},
-  });
+  } = useForm();
 
-  const [preview, setPreview] = useState(null);
+  useEffect(() => {
+    if (category) {
+      reset({
+        categoryTitle: category.categoryTitle,
+        href: category.href,
+      });
+      setTimeout(() => setPreview(null), 0);
+    }
+  }, [category, reset]);
 
-  const onSubmit = (data) => {
-    console.log("فرم ارسال شد:", data);
+  const onSubmit = (formData) => {
+    const imageFile = formData.imgUrl?.[0];
+    const oldImgageUrl = category?.imgUrl || null;
+
+    const payload = {
+      ...formData,
+      imgUrl: category?.imgUrl,
+    };
+
+    updateCategory({
+      href: category.href,
+      updateCategoryData: payload,
+      imageFile: imageFile,
+      oldImgageUrl: oldImgageUrl,
+    });
   };
 
   if (isLoading)
@@ -91,8 +112,9 @@ function AddEditCategory() {
           <FileUpload
             label="تصویر دسته‌بندی"
             register={register}
-            name="image"
+            name="imgUrl"
             defaultImage={category?.imgUrl}
+            onPreviewChange={setPreview}
           />
 
           {/* Buttons */}
@@ -109,7 +131,7 @@ function AddEditCategory() {
               type="submit"
               className="px-4 py-2 text-white rounded-lg bg-coffee-dark hover:opacity-90"
             >
-              ذخیره
+              {isPending ? "درحال ذخیره ..." : "ذخیره"}
             </button>
           </div>
         </form>
