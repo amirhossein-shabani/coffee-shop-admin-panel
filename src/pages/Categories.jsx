@@ -12,10 +12,16 @@ function Categories() {
 
   return (
     <div className="space-y-4">
-      <h1 className="pb-5 pr-1 text-xl font-bold text-coffee-dark/80">
+      <h1 className="pb-5 pr-1 text-xl font-bold text-coffee-dark/80 ">
         صفحه دسته‌بندی‌ها
       </h1>
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-2 gap-4 scroll-container !max-h-[80vh] px-2">
+        <button
+          onClick={() => navigate("/categories/add")}
+          className="col-span-2 py-2 text-center text-gray-800 border border-gray-400 border-dotted rounded-lg bg-white/50 hover:bg-white hover:text-black hover:scale-[1.02] transition duration-300"
+        >
+          اضاف کردن کتگوری <span className="text-xl"> + </span>
+        </button>
         {data?.map((category) => (
           <div
             onClick={() => navigate(`/categories/${category.href}`)}
@@ -53,13 +59,6 @@ function Categories() {
           </div>
         ))}
         {/* this is ui writ now and you have to write the logic later  */}
-
-        <button
-          onClick={() => navigate("/categories/add")}
-          className="col-span-2 py-2 text-center text-gray-800 border border-gray-400 border-dotted rounded-lg bg-white/50 hover:bg-white hover:text-black hover:scale-[1.02] transition duration-300"
-        >
-          اضاف کردن کتگوری <span className="text-xl"> + </span>
-        </button>
       </div>
       <Outlet />
     </div>

@@ -1,6 +1,10 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { useCategory, useUpdateCategory } from "../hooks/useCategories";
+import {
+  useAddCategory,
+  useCategory,
+  useUpdateCategory,
+} from "../hooks/useCategories";
 import Modal from "../components/Modal";
 import { useEffect, useState } from "react";
 import FileUpload from "../components/FileUpload";
@@ -10,13 +14,26 @@ function AddEditCategory() {
   const { href } = useParams();
   const navigate = useNavigate();
   const [preview, setPreview] = useState(null);
-  const { data: category, isLoading, error } = useCategory(href);
+  const isEdit = href !== "add" && !!href;
+  const {
+    data: category,
+    isLoading,
+    error,
+  } = useCategory(isEdit ? href : null);
 
-  const { mutate: updateCategory, isPending } = useUpdateCategory({
+  const { mutate: addCategory, isPending: isAdding } = useAddCategory({
+    onSuccess: () => {
+      navigate("/menu");
+    },
+  });
+
+  const { mutate: updateCategory, isUpdating } = useUpdateCategory({
     onSuccess: () => {
       navigate("/categories");
     },
   });
+
+  const isPending = isUpdating || isAdding;
 
   const {
     register,
@@ -26,30 +43,41 @@ function AddEditCategory() {
   } = useForm();
 
   useEffect(() => {
-    if (category) {
+    if (isEdit && category) {
       reset({
         categoryTitle: category.categoryTitle,
         href: category.href,
       });
       setTimeout(() => setPreview(null), 0);
     }
-  }, [category, reset]);
+  }, [category, reset, isEdit]);
 
   const onSubmit = (formData) => {
     const imageFile = formData.imgUrl?.[0];
-    const oldImgageUrl = category?.imgUrl || null;
-
-    const payload = {
-      ...formData,
-      imgUrl: category?.imgUrl,
-    };
-
-    updateCategory({
-      id: category.id,
-      updateCategoryData: payload,
-      imageFile: imageFile,
-      oldImgageUrl: oldImgageUrl,
-    });
+    if (isEdit) {
+      // ویرایش دسته‌بندی
+      const oldImgageUrl = category?.imgUrl || null;
+      const payload = {
+        ...formData,
+        imgUrl: category?.imgUrl,
+      };
+      updateCategory({
+        id: category.id,
+        updateCategoryData: payload,
+        imageFile: imageFile,
+        oldImgageUrl: oldImgageUrl,
+      });
+    } else {
+      // افزودن دسته‌بندی جدید
+      const payload = {
+        categoryTitle: formData.categoryTitle,
+        href: formData.href,
+      };
+      addCategory({
+        categoryData: payload,
+        imageFile: imageFile,
+      });
+    }
   };
 
   if (isLoading)
@@ -131,7 +159,7 @@ function AddEditCategory() {
               type="submit"
               className="px-4 py-2 text-white rounded-lg bg-coffee-dark hover:opacity-90"
             >
-              {isPending ? "درحال ذخیره ..." : "ذخیره"}
+              {isPending ? "درحال ذخیره ..." : isEdit ? "ذخیره" : "اضافه کردن"}
             </button>
           </div>
         </form>

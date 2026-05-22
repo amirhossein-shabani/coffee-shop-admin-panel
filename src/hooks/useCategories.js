@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
+  addCategory,
   getCategories,
   getCategoryByHref,
   updateCategory,
@@ -30,6 +31,20 @@ export function useUpdateCategory(options = {}) {
 
     onSuccess: (data) => {
       // فقط این کافیه 👇
+      queryClient.invalidateQueries(["categories"]);
+
+      options.onSuccess?.(data);
+    },
+  });
+}
+
+export function useAddCategory(options = {}) {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: addCategory,
+
+    onSuccess: (data) => {
       queryClient.invalidateQueries(["categories"]);
 
       options.onSuccess?.(data);

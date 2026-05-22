@@ -2,7 +2,7 @@ import { Outlet, useNavigate } from "react-router-dom";
 import { useState, useMemo } from "react";
 import { FiEdit } from "react-icons/fi";
 import { MdDelete } from "react-icons/md";
-import { useMenuItems } from "../hooks/useMenuItems";
+import { useDeleteMenuItem, useMenuItems } from "../hooks/useMenuItems";
 import SearchBar from "../components/SearchBar";
 import MenuLoading from "../components/MenuLoading";
 import AddItemButton from "../components/AddItemButton";
@@ -19,6 +19,14 @@ function Menu() {
       item.name.toLowerCase().includes(searchTerm.toLowerCase()),
     );
   }, [data, searchTerm]);
+
+  const deleteMenuItemMutation = useDeleteMenuItem();
+
+  function handleDelete(id, imageUrl) {
+    if (window.confirm("آیا از حذف این آیتم مطمئن هستید؟")) {
+      deleteMenuItemMutation.mutate({ id, imageUrl });
+    }
+  }
 
   if (isLoading) return <MenuLoading />;
   if (error) return <div>خطا در بارگذاری آیتم‌های منو: {error.message}</div>;
@@ -76,7 +84,10 @@ function Menu() {
                   <FiEdit />
                 </button>
 
-                <button className="transition hover:text-red-500">
+                <button
+                  onClick={() => handleDelete(item.id, item.imgUrl)}
+                  className="transition hover:text-red-500"
+                >
                   <MdDelete />
                 </button>
               </div>

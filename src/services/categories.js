@@ -194,3 +194,39 @@ export const updateCategory = async ({
     throw err;
   }
 };
+
+/* ========================== */
+/* افزودن دسته‌بندی جدید     */
+/* ========================== */
+export const addCategory = async ({ categoryData, imageFile }) => {
+  try {
+    let imgUrl = null;
+    // اگر عکس وجود دارد، ابتدا آپلود شود
+    if (imageFile) {
+      // آپلود عکس و گرفتن url
+      const tempId = `temp-${Date.now()}`; // id موقت برای نامگذاری عکس
+      imgUrl = await updateCategoryImage(imageFile, tempId);
+    }
+
+    // حذف id از داده‌های ارسالی اگر وجود دارد
+    const { id, ...categoryDataWithoutId } = categoryData || {};
+
+    // درج اطلاعات دسته‌بندی در دیتابیس
+    const { data, error } = await supabase
+      .from("categories")
+      .insert({ ...categoryDataWithoutId, imgUrl })
+      .select()
+      .single();
+
+    if (error) {
+      // اگر عکس آپلود شده بود، حذف شود
+      if (imgUrl) await deleteCategoryImage(imgUrl);
+      throw error;
+    }
+
+    return data;
+  } catch (err) {
+    console.error("خطا در افزودن دسته‌بندی:", err);
+    throw err;
+  }
+};

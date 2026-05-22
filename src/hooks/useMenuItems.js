@@ -1,5 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
+  addMenuItemWithImage,
+  deleteMenuItemById,
   getMenuItemById,
   getMenuItems,
   // updateMenuItem,
@@ -36,6 +38,30 @@ export function useUpdateMenuItemWithImage(options = {}) {
       queryClient.setQueryData(["menuItem", data.id], data);
 
       options.onSuccess?.(data);
+    },
+  });
+}
+
+export function useAddMenuItemWithImage(options = {}) {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: addMenuItemWithImage,
+
+    onSuccess: (data) => {
+      queryClient.invalidateQueries(["menuItems"]);
+      options.onSuccess?.(data);
+    },
+  });
+}
+
+export function useDeleteMenuItem() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ id, imageUrl }) => deleteMenuItemById({ id, imageUrl }),
+    onSuccess: () => {
+      queryClient.invalidateQueries(["menuItems"]);
     },
   });
 }

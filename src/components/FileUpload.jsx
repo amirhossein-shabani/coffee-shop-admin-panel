@@ -2,7 +2,15 @@ import { useEffect, useState } from "react";
 import { HiOutlineUpload } from "react-icons/hi";
 import { IoClose } from "react-icons/io5";
 
-function FileUpload({ label, register, name, defaultImage, onPreviewChange }) {
+function FileUpload({
+  label,
+  register,
+  name,
+  defaultImage,
+  onPreviewChange,
+  maxSize = 5 * 1024 * 1024,
+}) {
+  // 5MB default
   const [preview, setPreview] = useState(defaultImage || null);
   const { onChange, ...restRegister } = register(name);
 
@@ -32,6 +40,13 @@ function FileUpload({ label, register, name, defaultImage, onPreviewChange }) {
 
           const file = e.target.files?.[0];
           if (file) {
+            if (file.size > maxSize) {
+              alert(
+                `حجم فایل نباید بیشتر از ${maxSize / (1024 * 1024)} مگابایت باشد.`,
+              );
+              e.target.value = ""; // clear the input
+              return;
+            }
             handlePreviewChange(URL.createObjectURL(file));
           }
         }}
@@ -76,7 +91,9 @@ function FileUpload({ label, register, name, defaultImage, onPreviewChange }) {
         )}
       </label>
 
-      <p className="text-xs text-gray-400">فقط فایل تصویری (PNG, JPG)</p>
+      <p className="text-xs text-gray-400">
+        فقط فایل تصویری (PNG, JPG) حداکثر {maxSize / (1024 * 1024)} مگابایت
+      </p>
     </div>
   );
 }
