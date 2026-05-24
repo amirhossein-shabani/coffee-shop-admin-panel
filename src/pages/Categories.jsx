@@ -1,10 +1,11 @@
 import { MdDelete } from "react-icons/md";
 import { useNavigate, Outlet } from "react-router-dom";
-import { useCategoies } from "../hooks/useCategories";
+import { useCategoies, useDeleteCategory } from "../hooks/useCategories";
 import CategoriesLoading from "../components/CategoriesLoading";
 
 function Categories() {
   const { data, isLoading, error } = useCategoies();
+  const { mutate: deleteCategory, isPending: isDeleting } = useDeleteCategory();
   const navigate = useNavigate();
 
   if (isLoading) return <CategoriesLoading />;
@@ -30,7 +31,12 @@ function Categories() {
           >
             {/* دکمه حذف */}
             <button
-              onClick={(e) => e.stopPropagation()}
+              onClick={(e) => {
+                e.stopPropagation();
+                confirm(
+                  "آیا مطمئن هستید که می‌خواهید این دسته‌بندی را حذف کنید؟",
+                ) && deleteCategory(category.href);
+              }}
               className="absolute z-20 p-1 text-xs text-gray-500 transition top-1 left-1 hover:text-red-500"
             >
               <MdDelete size={18} />

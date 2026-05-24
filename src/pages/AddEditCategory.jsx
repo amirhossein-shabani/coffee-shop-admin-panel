@@ -23,7 +23,7 @@ function AddEditCategory() {
 
   const { mutate: addCategory, isPending: isAdding } = useAddCategory({
     onSuccess: () => {
-      navigate("/menu");
+      navigate("/categories");
     },
   });
 

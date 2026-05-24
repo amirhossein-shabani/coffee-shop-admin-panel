@@ -230,3 +230,30 @@ export const addCategory = async ({ categoryData, imageFile }) => {
     throw err;
   }
 };
+
+/* ========================== */
+/* حذف دسته‌بندی             */
+/* ========================== */
+export const deleteCategory = async (href) => {
+  try {
+    // دریافت اطلاعات دسته‌بندی برای حذف تصویر
+    const category = await getCategoryByHref(href);
+    if (category?.imgUrl) {
+      await deleteCategoryImage(category.imgUrl);
+    }
+
+    // حذف دسته‌بندی از دیتابیس
+    const { error } = await supabase
+      .from("categories")
+      .delete()
+      .eq("href", href);
+
+    if (error) {
+      console.error("خطا در حذف دسته‌بندی:", error);
+      throw error;
+    }
+  } catch (err) {
+    console.error("خطای حذف دسته‌بندی:", err);
+    throw err;
+  }
+};
