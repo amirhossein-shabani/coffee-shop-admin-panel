@@ -277,12 +277,29 @@ export const addMenuItemWithImage = async ({
   let newImageUrl = imgUrl || DEFAULT_IMAGE_URL;
 
   try {
+    // 1️⃣ آپلود عکس (اگر وجود دارد)
     if (imageFile) {
       const tempId = Date.now();
-
       newImageUrl = await uploadMenuItemImage(imageFile, tempId);
     }
 
+    // 2️⃣ پیدا کردن آخرین order مربوط به همین category (tag)
+    const { data: lastItem, error: fetchError } = await supabase
+      .from("menuItems")
+      .select("display_order")
+      .eq("tag", tag)
+      .order("display_order", { ascending: false })
+      .limit(1)
+      .maybeSingle();
+
+    if (fetchError) {
+      throw fetchError;
+    }
+
+    // 3️⃣ محاسبه order جدید
+    const nextOrder = lastItem?.display_order ? lastItem.display_order + 1 : 1;
+
+    // 4️⃣ insert آیتم جدید
     const { data, error } = await supabase
       .from("menuItems")
       .insert({
@@ -291,6 +308,7 @@ export const addMenuItemWithImage = async ({
         description,
         imgUrl: newImageUrl,
         tag,
+        display_order: nextOrder, // ⭐ مهم‌ترین خط
       })
       .select()
       .single();
@@ -299,7 +317,6 @@ export const addMenuItemWithImage = async ({
       if (imageFile) {
         await deleteMenuItemImage(newImageUrl);
       }
-
       throw error;
     }
 
