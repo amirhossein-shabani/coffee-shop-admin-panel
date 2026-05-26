@@ -3,7 +3,7 @@ import { supabase } from "./api";
 const BUCKET_NAME = "categorie-images";
 
 /* ========================== */
-/* گرفتن public URL کامل     */
+/* Get full public URL       */
 /* ========================== */
 const getPublicUrl = (filePath) => {
   const { data } = supabase.storage.from(BUCKET_NAME).getPublicUrl(filePath);
@@ -11,7 +11,7 @@ const getPublicUrl = (filePath) => {
 };
 
 /* ========================== */
-/* استخراج filePath از URL (FIXED) */
+/* Extract filePath from URL (FIXED) */
 /* ========================== */
 const extractFilePath = (url) => {
   if (!url) return null;
@@ -20,7 +20,7 @@ const extractFilePath = (url) => {
     const urlObj = new URL(url);
     const path = urlObj.pathname;
 
-    // فقط اسم فایل داخل bucket
+    // only the filename inside the bucket
     const filePath = path.split(`/${BUCKET_NAME}/`)[1];
 
     return filePath || null;
@@ -30,7 +30,7 @@ const extractFilePath = (url) => {
 };
 
 /* ========================== */
-/* آپلود تصویر               */
+/* Upload image              */
 /* ========================== */
 export const updateCategoryImage = async (file, categoryId) => {
   try {
@@ -56,7 +56,7 @@ export const updateCategoryImage = async (file, categoryId) => {
 };
 
 /* ========================== */
-/* حذف تصویر (FIXED + LOG)   */
+/* Delete image (FIXED + LOG) */
 /* ========================== */
 export const deleteCategoryImage = async (imageUrl) => {
   try {
@@ -85,7 +85,7 @@ export const deleteCategoryImage = async (imageUrl) => {
 };
 
 /* ========================== */
-/* گرفتن همه دسته‌بندی‌ها    */
+/* Get all categories        */
 /* ========================== */
 export const getCategories = async () => {
   const { data, error } = await supabase
@@ -102,7 +102,7 @@ export const getCategories = async () => {
 };
 
 /* ========================== */
-/* گرفتن با id               */
+/* Get by id                 */
 /* ========================== */
 export const getCategoryById = async (id) => {
   const { data, error } = await supabase
@@ -120,7 +120,7 @@ export const getCategoryById = async (id) => {
 };
 
 /* ========================== */
-/* گرفتن با href             */
+/* Get by href               */
 /* ========================== */
 export const getCategoryByHref = async (href) => {
   const { data, error } = await supabase
@@ -137,7 +137,7 @@ export const getCategoryByHref = async (href) => {
 };
 
 /* ========================== */
-/* آپدیت کامل (FIXED FLOW)   */
+/* Full update (FIXED FLOW)   */
 /* ========================== */
 export const updateCategory = async ({
   id,
@@ -148,12 +148,12 @@ export const updateCategory = async ({
   try {
     let newImageUrl = updateCategoryData.imgUrl;
 
-    // ✅ اگر عکس جدید داریم
+    // ✅ If we have a new image
     if (imageFile) {
-      // 1. آپلود عکس جدید
+      // 1. Upload the new image
       newImageUrl = await updateCategoryImage(imageFile, id);
 
-      // 2. آپدیت دیتابیس با عکس جدید
+      // 2. Update the database with the new image
       const { data, error } = await supabase
         .from("categories")
         .update({ ...updateCategoryData, imgUrl: newImageUrl })
@@ -167,7 +167,7 @@ export const updateCategory = async ({
         throw error;
       }
 
-      // 3. حذف عکس قبلی (بدون شرط حساس)
+      // 3. Delete the previous image (no strict condition)
       if (oldImgageUrl) {
         await deleteCategoryImage(oldImgageUrl);
       }
@@ -175,7 +175,7 @@ export const updateCategory = async ({
       return data;
     }
 
-    // ✅ اگر عکس جدید نداریم
+    // ✅ If we don't have a new image
     const { data, error } = await supabase
       .from("categories")
       .update(updateCategoryData)
@@ -196,30 +196,54 @@ export const updateCategory = async ({
 };
 
 /* ========================== */
-/* افزودن دسته‌بندی جدید     */
+/* Add new category         */
 /* ========================== */
 export const addCategory = async ({ categoryData, imageFile }) => {
   try {
     let imgUrl = null;
-    // اگر عکس وجود دارد، ابتدا آپلود شود
+    let displayOrder = 1;
+
+    // Determine next display_order based on current highest value
+    const { data: lastCategory, error: orderError } = await supabase
+      .from("categories")
+      .select("display_order")
+      .order("display_order", { ascending: false })
+      .limit(1)
+      .maybeSingle();
+
+    if (orderError) {
+      console.error("خطا در دریافت display_order آخرین دسته‌بندی:", orderError);
+      throw orderError;
+    }
+
+    if (lastCategory?.display_order != null) {
+      displayOrder = lastCategory.display_order + 1;
+    }
+
+    // If an image exists, upload it first
     if (imageFile) {
-      // آپلود عکس و گرفتن url
-      const tempId = `temp-${Date.now()}`; // id موقت برای نامگذاری عکس
+      // Upload image and get url
+      const tempId = `temp-${Date.now()}`; // temporary id for naming the image
       imgUrl = await updateCategoryImage(imageFile, tempId);
     }
 
-    // حذف id از داده‌های ارسالی اگر وجود دارد
-    const { id, ...categoryDataWithoutId } = categoryData || {};
+    // remove id and display_order from submitted data if present
+    const {
+      _id,
+      _display_order,
+      displayOrder: _displayOrderField,
+      ...categoryDataWithoutId
+    } = categoryData || {};
 
-    // درج اطلاعات دسته‌بندی در دیتابیس
+    // insert category data into the database
     const { data, error } = await supabase
       .from("categories")
-      .insert({ ...categoryDataWithoutId, imgUrl })
+      .insert({ ...categoryDataWithoutId, imgUrl, display_order: displayOrder })
       .select()
       .single();
 
     if (error) {
-      // اگر عکس آپلود شده بود، حذف شود
+      // if an image was uploaded, delete it
       if (imgUrl) await deleteCategoryImage(imgUrl);
       throw error;
     }
@@ -232,17 +256,17 @@ export const addCategory = async ({ categoryData, imageFile }) => {
 };
 
 /* ========================== */
-/* حذف دسته‌بندی             */
+/* Delete category           */
 /* ========================== */
 export const deleteCategory = async (href) => {
   try {
-    // دریافت اطلاعات دسته‌بندی برای حذف تصویر
+    // fetch category data to delete its image
     const category = await getCategoryByHref(href);
     if (category?.imgUrl) {
       await deleteCategoryImage(category.imgUrl);
     }
 
-    // حذف دسته‌بندی از دیتابیس
+    // delete category from database
     const { error } = await supabase
       .from("categories")
       .delete()

@@ -6,7 +6,7 @@ const DEFAULT_IMAGE_URL =
   "https://flhcfdglalmwmfxnyvhz.supabase.co/storage/v1/object/public/items-images/itemBackupImg.png";
 
 /* ========================== */
-/* گرفتن public URL کامل      */
+/*  catch public URL       */
 /* ========================== */
 const getPublicUrl = (filePath) => {
   const { data } = supabase.storage.from(BUCKET_NAME).getPublicUrl(filePath);
@@ -15,7 +15,7 @@ const getPublicUrl = (filePath) => {
 };
 
 /* ========================== */
-/* استخراج filePath از URL     */
+/*   extract file path from URL */
 /* ========================== */
 const extractFilePath = (url) => {
   if (!url) return null;
@@ -40,7 +40,7 @@ const extractFilePath = (url) => {
 };
 
 /* ========================== */
-/* آپلود تصویر                */
+/* upload menu item image       */
 /* ========================== */
 export const uploadMenuItemImage = async (file, itemId) => {
   try {
@@ -67,13 +67,13 @@ export const uploadMenuItemImage = async (file, itemId) => {
 };
 
 /* ========================== */
-/* حذف تصویر امن               */
+/* safe image deletion          */
 /* ========================== */
 export const deleteMenuItemImage = async (imageUrl) => {
   try {
     if (!imageUrl) return;
 
-    // عکس پیش‌فرض حذف نشود
+    // the default backup image should never be deleted
     if (imageUrl.includes("itemBackupImg.png")) {
       return;
     }
@@ -88,7 +88,7 @@ export const deleteMenuItemImage = async (imageUrl) => {
       return;
     }
 
-    // چک وجود فایل
+    // check if file exists before trying to delete
     const folderPath = filePath.includes("/")
       ? filePath.substring(0, filePath.lastIndexOf("/"))
       : "";
@@ -112,7 +112,7 @@ export const deleteMenuItemImage = async (imageUrl) => {
       return;
     }
 
-    // حذف فایل
+    // delete file
     const { data, error } = await supabase.storage
       .from(BUCKET_NAME)
       .remove([filePath]);
@@ -132,7 +132,7 @@ export const deleteMenuItemImage = async (imageUrl) => {
 };
 
 /* ========================== */
-/* گرفتن همه آیتم‌ها          */
+/* catch all menu items          */
 /* ========================== */
 export const getMenuItems = async () => {
   const { data, error } = await supabase
@@ -149,7 +149,7 @@ export const getMenuItems = async () => {
 };
 
 /* ========================== */
-/* گرفتن یک آیتم              */
+/* catch menu item by ID */
 /* ========================== */
 export const getMenuItemById = async (id) => {
   const { data, error } = await supabase
@@ -164,26 +164,7 @@ export const getMenuItemById = async (id) => {
 };
 
 /* ========================== */
-/* آپدیت بدون تصویر           */
-/* ========================== */
-export const updateMenuItem = async ({ id, updateData }) => {
-  const { data, error } = await supabase
-    .from("menuItems")
-    .update(updateData)
-    .eq("id", id)
-    .select()
-    .single();
-
-  if (error) {
-    console.error("خطا در آپدیت آیتم", error);
-    throw error;
-  }
-
-  return data;
-};
-
-/* ========================== */
-/* آپدیت همراه تصویر جدید     */
+/* update menu item with image   */
 /* ========================== */
 export const updateMenuItemWithImage = async ({
   id,
@@ -195,12 +176,12 @@ export const updateMenuItemWithImage = async ({
   let newImageUrl = updateData.imgUrl;
 
   try {
-    // 1️⃣ اگر عکس جدید انتخاب شده → اول آپلود کن
+    // 1️⃣ if we have new image, upload it and get new URL
     if (imageFile) {
       newImageUrl = await uploadMenuItemImage(imageFile, id);
     }
 
-    // 2️⃣ دیتابیس رو آپدیت کن
+    // 2️⃣ update database with new image URL (if new image uploaded) or old image URL (if no new image)
     const { data, error } = await supabase
       .from("menuItems")
       .update({
@@ -221,7 +202,7 @@ export const updateMenuItemWithImage = async ({
       throw error;
     }
 
-    // 3️⃣ حذف عکس قبلی
+    // 3️⃣ delete last image (if new image uploaded and old image exists and is different from new one)
     if (imageFile && oldImageUrl && oldImageUrl !== newImageUrl) {
       await deleteMenuItemImage(oldImageUrl);
     }
@@ -234,37 +215,7 @@ export const updateMenuItemWithImage = async ({
 };
 
 /* ========================== */
-/* اضافه کردن آیتم            */
-/* ========================== */
-export const addMenuItem = async ({
-  name,
-  price,
-  imgUrl,
-  description,
-  tag,
-}) => {
-  const { data, error } = await supabase
-    .from("menuItems")
-    .insert({
-      name,
-      price,
-      imgUrl,
-      description,
-      tag,
-    })
-    .select()
-    .single();
-
-  if (error) {
-    console.error("خطا در اضافه کردن آیتم جدید:", error);
-    throw error;
-  }
-
-  return data;
-};
-
-/* ========================== */
-/* اضافه کردن آیتم با تصویر   */
+/* add menu item with image   */
 /* ========================== */
 export const addMenuItemWithImage = async ({
   name,
@@ -277,13 +228,13 @@ export const addMenuItemWithImage = async ({
   let newImageUrl = imgUrl || DEFAULT_IMAGE_URL;
 
   try {
-    // 1️⃣ آپلود عکس (اگر وجود دارد)
+    // 1️⃣ uplaod (if image selected)
     if (imageFile) {
       const tempId = Date.now();
       newImageUrl = await uploadMenuItemImage(imageFile, tempId);
     }
 
-    // 2️⃣ پیدا کردن آخرین order مربوط به همین category (tag)
+    // 2️⃣ find the last order for the same category (tag)
     const { data: lastItem, error: fetchError } = await supabase
       .from("menuItems")
       .select("display_order")
@@ -296,10 +247,10 @@ export const addMenuItemWithImage = async ({
       throw fetchError;
     }
 
-    // 3️⃣ محاسبه order جدید
+    // 3️⃣ calculate next order
     const nextOrder = lastItem?.display_order ? lastItem.display_order + 1 : 1;
 
-    // 4️⃣ insert آیتم جدید
+    // 4️⃣ insert new item
     const { data, error } = await supabase
       .from("menuItems")
       .insert({
@@ -328,16 +279,16 @@ export const addMenuItemWithImage = async ({
 };
 
 /* ========================== */
-/* حذف آیتم همراه عکس         */
+/* delete menu item with image         */
 /* ========================== */
 export const deleteMenuItemById = async ({ id, imageUrl }) => {
   try {
-    // اول عکس حذف شود
+    // first delete image (if exists)
     if (imageUrl && !imageUrl.includes("itemBackupImg.png")) {
       await deleteMenuItemImage(imageUrl);
     }
 
-    // بعد آیتم حذف شود
+    // then delete database record
     const { data, error } = await supabase
       .from("menuItems")
       .delete()
