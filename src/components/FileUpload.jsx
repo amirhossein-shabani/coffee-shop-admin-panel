@@ -15,6 +15,12 @@ function FileUpload({
   const { onChange, ...restRegister } = register(name);
 
   useEffect(() => {
+    if (defaultImage) {
+      setPreview(defaultImage);
+    }
+  }, [defaultImage]);
+
+  useEffect(() => {
     return () => {
       if (preview && !defaultImage) URL.revokeObjectURL(preview);
     };

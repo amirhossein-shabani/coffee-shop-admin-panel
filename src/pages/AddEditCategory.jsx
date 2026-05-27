@@ -27,7 +27,7 @@ function AddEditCategory() {
     },
   });
 
-  const { mutate: updateCategory, isUpdating } = useUpdateCategory({
+  const { mutate: updateCategory, isPending: isUpdating } = useUpdateCategory({
     onSuccess: () => {
       navigate("/categories");
     },

@@ -8,7 +8,7 @@ function Categories() {
   const { mutate: deleteCategory, isPending: isDeleting } = useDeleteCategory();
   const navigate = useNavigate();
 
-  if (isLoading) return <CategoriesLoading />;
+  if (isLoading || isDeleting) return <CategoriesLoading />;
   if (error) return <div>خطا در بارگذاری دسته‌بندی‌ها: {error.message}</div>;
 
   return (

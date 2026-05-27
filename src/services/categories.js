@@ -228,12 +228,7 @@ export const addCategory = async ({ categoryData, imageFile }) => {
     }
 
     // remove id and display_order from submitted data if present
-    const {
-      _id,
-      _display_order,
-      displayOrder: _displayOrderField,
-      ...categoryDataWithoutId
-    } = categoryData || {};
+    const { id: _id, ...categoryDataWithoutId } = categoryData || {};
 
     // insert category data into the database
     const { data, error } = await supabase
