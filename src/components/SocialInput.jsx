@@ -23,7 +23,13 @@ export function makeTelegramUrl(u) {
 }
 
 // SocialInput integrates with react-hook-form register
-export default function SocialInput({ label, name, register, placeholder }) {
+export default function SocialInput({
+  label,
+  name,
+  register,
+  placeholder,
+  style,
+}) {
   const { onChange, onBlur, ref, ...rest } = register(name || "");
 
   const handleChange = (e) => {
@@ -33,7 +39,7 @@ export default function SocialInput({ label, name, register, placeholder }) {
   };
 
   return (
-    <div className="w-full">
+    <div className={style}>
       <input
         {...rest}
         ref={ref}

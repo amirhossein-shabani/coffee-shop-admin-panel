@@ -10,29 +10,41 @@ function FileUpload({
   onPreviewChange,
   maxSize = 5 * 1024 * 1024,
 }) {
-  // 5MB default
   const [preview, setPreview] = useState(defaultImage || null);
+
   const { onChange, ...restRegister } = register(name);
 
+  // sync فقط وقتی defaultImage واقعی تغییر کنه
   useEffect(() => {
-    if (defaultImage) {
-      setPreview(defaultImage);
-    }
+    setPreview(defaultImage || null);
   }, [defaultImage]);
 
-  useEffect(() => {
-    return () => {
-      if (preview && !defaultImage) URL.revokeObjectURL(preview);
-    };
-  }, [preview, defaultImage]);
+  const handleFileChange = (e) => {
+    onChange(e);
 
-  const handlePreviewChange = (newPreview) => {
-    setPreview(newPreview);
-    onPreviewChange?.(newPreview);
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (file.size > maxSize) {
+      alert(`حداکثر ${maxSize / (1024 * 1024)}MB`);
+      e.target.value = "";
+      return;
+    }
+
+    const url = URL.createObjectURL(file);
+
+    setPreview(url);
+    onPreviewChange?.(url);
+  };
+
+  const removeImage = (e) => {
+    e.preventDefault();
+    setPreview(null);
+    onPreviewChange?.(null);
   };
 
   return (
-    <div className="space-y-2 ">
+    <div className="space-y-2">
       <label className="text-sm font-medium text-gray-700">{label}</label>
 
       <input
@@ -41,24 +53,9 @@ function FileUpload({
         id={name}
         {...restRegister}
         className="hidden"
-        onChange={(e) => {
-          onChange(e);
-
-          const file = e.target.files?.[0];
-          if (file) {
-            if (file.size > maxSize) {
-              alert(
-                `حجم فایل نباید بیشتر از ${maxSize / (1024 * 1024)} مگابایت باشد.`,
-              );
-              e.target.value = ""; // clear the input
-              return;
-            }
-            handlePreviewChange(URL.createObjectURL(file));
-          }
-        }}
+        onChange={handleFileChange}
       />
 
-      {/* Upload Box */}
       <label
         htmlFor={name}
         className={`relative flex items-center justify-center w-full h-40 rounded-xl border-2 border-dashed cursor-pointer transition
@@ -70,21 +67,18 @@ function FileUpload({
               src={preview}
               alt="preview"
               className="object-cover w-full h-full rounded-xl"
+              loading="lazy"
+              decoding="async"
             />
 
-            {/* Overlay */}
-            <div className="absolute inset-0 flex items-center justify-center text-sm text-white transition opacity-0 bg-black/40 rounded-xl hover:opacity-100">
+            <div className="absolute inset-0 flex items-center justify-center text-sm text-white opacity-0 bg-black/40 hover:opacity-100 rounded-xl">
               تعویض تصویر
             </div>
 
-            {/* Remove */}
             <button
               type="button"
-              onClick={(e) => {
-                e.preventDefault();
-                handlePreviewChange(null);
-              }}
-              className="absolute flex items-center justify-center text-white bg-red-500 rounded-full w-7 h-7 top-2 right-2 hover:bg-red-600"
+              onClick={removeImage}
+              className="absolute flex items-center justify-center text-white bg-red-500 rounded-full w-7 h-7 top-2 right-2"
             >
               <IoClose size={16} />
             </button>
@@ -96,10 +90,6 @@ function FileUpload({
           </div>
         )}
       </label>
-
-      <p className="text-xs text-gray-400">
-        فقط فایل تصویری (PNG, JPG) حداکثر {maxSize / (1024 * 1024)} مگابایت
-      </p>
     </div>
   );
 }

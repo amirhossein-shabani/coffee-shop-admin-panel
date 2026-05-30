@@ -1,4 +1,4 @@
-import { useForm } from "react-hook-form";
+import { Form, useForm } from "react-hook-form";
 import { useSetting, useUpdateSetting } from "../hooks/useSetting";
 import { useEffect } from "react";
 import FormButton from "../components/FormButton";
@@ -8,8 +8,11 @@ import SocialInput, {
   makeInstaUrl,
   makeTelegramUrl,
 } from "../components/SocialInput";
+import FileUpload from "../components/FileUpload";
+import FormRow from "../components/FormRow";
 
 function Setting() {
+  console.count("Setting render");
   const { data, isLoading, error } = useSetting();
 
   const {
@@ -87,92 +90,124 @@ function Setting() {
 
   return (
     <>
+      <div></div>
       <h1 className="pb-5 pr-1 text-xl font-bold text-coffee-dark/80">
         تنظیمات
       </h1>
 
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="flex flex-col items-start w-full gap-2 text-gray-500"
+        className="flex flex-col items-start w-full gap-2 text-gray-500 scroll-container  !max-h-[80vh] px-2 "
       >
-        <input
-          {...register("address")}
-          placeholder="آدرس"
-          className="w-full p-1 px-2 text-sm font-normal rounded-lg"
-        />
+        <FormRow label="آدرس">
+          <input
+            {...register("address")}
+            placeholder="آدرس"
+            className="w-full p-1 px-2 text-sm font-normal rounded-lg"
+          />
+        </FormRow>
 
-        <input
-          {...register("phoneNumber", {
-            pattern: {
-              value: /^[0-9]*$/,
-              message: "شماره موبایل فقط باید شامل عدد باشد",
-            },
-            minLength: {
-              value: 10,
-              message: "حداقل 10 رقم",
-            },
-            maxLength: {
-              value: 11,
-              message: "حداکثر 11 رقم",
-            },
-          })}
-          placeholder="شماره موبایل"
-          className="w-full p-1 px-2 text-sm font-normal rounded-lg"
-        />
+        <FormRow label="شماره موبایل">
+          <input
+            {...register("phoneNumber", {
+              pattern: {
+                value: /^[0-9]*$/,
+                message: "شماره موبایل فقط باید شامل عدد باشد",
+              },
+              minLength: {
+                value: 10,
+                message: "حداقل 10 رقم",
+              },
+              maxLength: {
+                value: 11,
+                message: "حداکثر 11 رقم",
+              },
+            })}
+            placeholder="شماره موبایل"
+            className="w-full p-1 px-2 text-sm font-normal rounded-lg"
+          />
+        </FormRow>
 
-        <input
-          {...register("telephonNumber", {
-            pattern: {
-              value: /^[0-9]*$/,
-              message: "فقط عدد",
-            },
-          })}
-          placeholder="شماره تلفن"
-          className="w-full p-1 px-2 text-sm font-normal rounded-lg"
-        />
+        <FormRow label="شماره تلفن">
+          <input
+            {...register("telephonNumber", {
+              pattern: {
+                value: /^[0-9]*$/,
+                message: "فقط عدد",
+              },
+            })}
+            placeholder="شماره تلفن"
+            className="w-full p-1 px-2 text-sm font-normal rounded-lg"
+          />
+        </FormRow>
 
-        <input
-          {...register("email")}
-          placeholder="ایمیل"
-          className="w-full p-1 px-2 text-sm font-normal rounded-lg"
-        />
+        <FormRow label="ایمیل">
+          <input
+            {...register("email")}
+            placeholder="ایمیل"
+            className="w-full p-1 px-2 text-sm font-normal rounded-lg"
+          />
+        </FormRow>
 
-        <input
-          {...register("openTime")}
-          placeholder="ساعت باز شدن"
-          className="w-full p-1 px-2 text-sm font-normal rounded-lg"
-        />
+        <FormRow label="ساعت کاری">
+          <input
+            {...register("openTime")}
+            placeholder="ساعت باز شدن"
+            className="w-full p-1 px-2 text-sm font-normal rounded-lg"
+          />
+        </FormRow>
 
-        <input
-          {...register("closeTime")}
-          placeholder="ساعت بسته شدن"
-          className="w-full p-1 px-2 text-sm font-normal rounded-lg"
-        />
+        <FormRow label="ساعت بستن">
+          <input
+            {...register("closeTime")}
+            placeholder="ساعت بسته شدن"
+            className="w-full p-1 px-2 text-sm font-normal rounded-lg"
+          />
+        </FormRow>
 
-        <SocialInput
-          register={register}
-          name="instageramID"
-          placeholder="آیدی اینستاگرام"
-        />
+        <FormRow label="آیدی اینستاگرام">
+          <SocialInput
+            register={register}
+            name="instageramID"
+            placeholder="آیدی اینستاگرام"
+            style="w-full"
+          />
+        </FormRow>
 
-        <SocialInput
-          register={register}
-          name="telegramID"
-          placeholder="آیدی تلگرام"
-        />
+        <FormRow label="آیدی تلگرام">
+          <SocialInput
+            register={register}
+            name="telegramID"
+            placeholder="آیدی تلگرام"
+            style="w-full"
+          />
+        </FormRow>
 
-        <input
-          {...register("landingHyperText")}
-          placeholder="هایپر تکست لندینگ پیج"
-          className="w-full p-1 px-2 text-sm font-normal rounded-lg"
-        />
+        <FormRow label="هایپر تکست لندینگ پیج">
+          <input
+            {...register("landingHyperText")}
+            placeholder="هایپر تکست لندینگ پیج"
+            className="w-full p-1 px-2 text-sm font-normal rounded-lg"
+          />
+        </FormRow>
 
-        <textarea
-          rows={5}
-          {...register("description")}
-          placeholder="توضیحات"
-          className="w-full p-1 px-2 text-xs font-normal rounded-lg resize-none"
-        />
+        <FormRow label="توضیحات">
+          <textarea
+            rows={5}
+            {...register("description")}
+            placeholder="توضیحات"
+            className="w-full p-1 px-2 text-xs font-normal rounded-lg resize-none min-h-[120px]"
+          />
+        </FormRow>
+
+        <div>
+          <FileUpload
+            label="تصویر لوگو"
+            register={register}
+            name="logoUrl"
+            defaultImage={data?.logoUrl || null}
+          />
+        </div>
 
         <FormButton
           type="submit"
