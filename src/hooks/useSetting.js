@@ -14,10 +14,15 @@ export function useUpdateSetting(options = {}) {
 
   return useMutation({
     mutationFn: updateSettings,
+
     onSuccess: (data) => {
-      queryClient.invalidateQueries(["setting"]);
+      queryClient.invalidateQueries({
+        queryKey: ["setting"],
+      });
+
       options.onSuccess?.(data);
     },
+
     onError: options.onError,
   });
 }

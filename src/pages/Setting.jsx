@@ -1,4 +1,4 @@
-import { Form, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { useSetting, useUpdateSetting } from "../hooks/useSetting";
 import { useEffect } from "react";
 import FormButton from "../components/FormButton";
@@ -59,7 +59,6 @@ function Setting() {
 
     return value;
   }
-
   function onSubmit(formData) {
     const payload = {
       address: normalize(formData.address),
@@ -78,8 +77,12 @@ function Setting() {
       telegramID: formData.telegramID?.trim()
         ? makeTelegramUrl(formData.telegramID)
         : null,
+
+      // 👇 مهم
+      logoUrl: formData.logoUrl?.[0],
     };
 
+    console.log("logo file:", formData.logoUrl);
     console.log(payload);
 
     updateSetting.mutate(payload);
@@ -200,14 +203,13 @@ function Setting() {
           />
         </FormRow>
 
-        <div>
+        <FormRow label="تصویر لوگو">
           <FileUpload
-            label="تصویر لوگو"
             register={register}
             name="logoUrl"
             defaultImage={data?.logoUrl || null}
           />
-        </div>
+        </FormRow>
 
         <FormButton
           type="submit"

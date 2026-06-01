@@ -206,10 +206,3 @@ function AddEditItem() {
 }
 
 export default AddEditItem;
-
-// create the validation for the img size
-// write the logic for mutation the daat
-// responsive this modal for the phone
-// error fixing : when the uploadfile don't have any item and try to save the edit and can't save after that if the user chose new img file don't show that to user in the edit form ui .
-
-// the update without the img change done and know fix the img change accessebility and work on the add item and delete item section .
