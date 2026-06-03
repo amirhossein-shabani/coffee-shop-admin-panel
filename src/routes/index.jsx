@@ -16,6 +16,7 @@ export const router = createBrowserRouter([
   {
     path: "/login",
     element: <Login />,
+    handle: { title: "ورود" },
   },
   {
     path: "/",
@@ -24,10 +25,12 @@ export const router = createBrowserRouter([
       {
         index: true,
         element: <Dashboard />,
+        handle: { title: "داشبورد" },
       },
       {
         path: "menu",
         element: <Menu />,
+        handle: { title: "منو" },
         children: [
           {
             path: ":id",
@@ -42,6 +45,7 @@ export const router = createBrowserRouter([
       {
         path: "categories",
         element: <Categories />,
+        handle: { title: "دسته‌بندی‌ها" },
         children: [
           {
             path: ":href",
@@ -56,6 +60,7 @@ export const router = createBrowserRouter([
       {
         path: "setting",
         element: <Setting />,
+        handle: { title: "تنظیمات" },
       },
     ],
   },

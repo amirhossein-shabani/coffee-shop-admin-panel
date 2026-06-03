@@ -17,9 +17,11 @@ function Dashboard() {
 
   return (
     <div className="container">
-      <h1 className="pb-5 pr-1 text-2xl font-bold text-coffee-dark/80">
-        داشبورد
-      </h1>
+      {window.innerWidth >= 768 && (
+        <h1 className="pb-5 pr-1 text-2xl font-bold text-coffee-dark/80">
+          داشبورد
+        </h1>
+      )}
       <h2 className="text-xl font-bold text-gray-700 ">
         خوش امدی {data.AdminName} 😊
       </h2>

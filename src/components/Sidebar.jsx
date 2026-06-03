@@ -1,71 +1,71 @@
-import { NavLink } from "react-router-dom";
+import NavLinks from "./NavLinks";
+import { useState } from "react";
+import MobileSidebar from "./MobileSidebar";
+import { GiHamburgerMenu } from "react-icons/gi";
+import { useMatches } from "react-router-dom";
 
 function Sidebar() {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const matches = useMatches();
+
+  const lastMatch = matches[matches.length - 1];
+
+  const title = lastMatch?.handle?.title || "مدیریت کافه";
+
   return (
-    <aside
-      dir="rtl"
-      className="sticky flex flex-col w-48 h-screen p-6 text-coffee-light bg-coffee-dark"
-    >
+    <>
       <div>
-        <h1 className="mb-8 text-2xl font-bold text-coffee-light">
-          مدیریت کافه
-        </h1>
-        <nav className="flex flex-col space-y-4">
-          <NavLink
-            to="/"
-            className={({ isActive }) =>
-              ` block p-3 rounded transition ${isActive ? "bg-coffee text-white font-bold" : "hover:bg-coffee/80"}`
-            }
+        <div
+          className={`absolute m-1 rounded top-0 left-0 right-0 z-50 flex justify-between p-4 ${!isOpen && "bg-coffee-dark"} text-end md:hidden `}
+        >
+          <h1
+            className={`flex pt-1.5 text-2xl font-bold ${isOpen ? "text-coffee-light" : "text-coffee-light font-extrabold"}`}
           >
-            📊 داشبورد
-          </NavLink>
-          <NavLink
-            to="/menu"
-            className={({ isActive }) =>
-              ` block p-3 rounded transition ${isActive ? "bg-coffee text-white font-bold" : "hover:bg-coffee/80"}`
-            }
+            {title}
+          </h1>
+          <button
+            onClick={() => setIsOpen(!isOpen)}
+            className="relative flex items-center justify-center w-10 h-10 justify-end-end"
           >
-            🍽️ منو
-          </NavLink>
-          {/* Orders route is not ready yet */}
-          {/* <NavLink
-              to="/orders"
-              className={({ isActive }) =>
-                ` block p-3 transition ${isActive ? "bg-blue-600 font-bold" : "hover:bg-gray-700"}`
-              }
+            {/* hamburger */}
+            <GiHamburgerMenu
+              className={`absolute text-coffee-light transition-all duration-300 w-8 h-8 
+              ${isOpen ? "opacity-0 rotate-90 scale-75" : "opacity-100 rotate-0 scale-100"}
+            `}
+            />
+
+            {/* close */}
+            <span
+              className={`absolute text-coffee-light transition-all duration-300 text-2xl mt-[5px]
+            ${isOpen ? "opacity-100 rotate-0 scale-150" : "opacity-0 -rotate-90 scale-75"}
+          `}
             >
-              📦 Orders
-            </NavLink> */}
-          <NavLink
-            to="/categories"
-            className={({ isActive }) =>
-              ` block p-3 rounded transition ${isActive ? "bg-coffee text-white font-bold" : "hover:bg-coffee/80"}`
-            }
-          >
-            🗂️ کتگوری ها
-          </NavLink>
-          <NavLink
-            to="/setting"
-            className={({ isActive }) =>
-              ` block p-3 rounded transition ${isActive ? "bg-coffee text-white font-bold" : "hover:bg-coffee/80"}`
-            }
-          >
-            ⚙️ تنظیمات
-          </NavLink>
-          {/* <NavLink
-            to="/users"
-            className={({ isActive }) =>
-              ` block p-3 rounded transition ${isActive ? "bg-coffee text-white font-bold" : "hover:bg-coffee/80"}`
-            }
-          >
-            👥 کاربر ها
-          </NavLink> */}
-        </nav>
+              ✖
+            </span>
+          </button>
+        </div>
       </div>
-      <button className="w-full p-3 mt-auto text-right rounded hover:bg-coffee/80">
-        🚪 خارج شدن
-      </button>
-    </aside>
+
+      <MobileSidebar isOpen={isOpen} onClose={() => setIsOpen(false)} />
+
+      <aside
+        dir="rtl"
+        className="hidden p-6 md:sticky md:h-screen md:w-48 md:flex-col md:flex text-coffee-light bg-coffee-dark "
+      >
+        <div>
+          <h1 className="mb-8 text-2xl font-bold text-coffee-light">
+            مدیریت کافه
+          </h1>
+          <nav className="flex flex-col space-y-4">
+            <NavLinks />
+          </nav>
+        </div>
+        <button className="w-full p-3 mt-auto text-right rounded hover:bg-coffee/80">
+          🚪 خارج شدن
+        </button>
+      </aside>
+    </>
   );
 }
 

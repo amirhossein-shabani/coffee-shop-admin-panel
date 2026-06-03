@@ -33,9 +33,11 @@ function Menu() {
 
   return (
     <div className="space-y-4 ">
-      <h1 className="pb-5 pr-1 text-xl font-bold text-coffee-dark/80">
-        صفحه منو
-      </h1>
+      {window.innerWidth >= 768 && (
+        <h1 className="pb-5 pr-1 text-xl font-bold text-coffee-dark/80">
+          صفحه منو
+        </h1>
+      )}
 
       <div className="flex flex-row ">
         <SearchBar

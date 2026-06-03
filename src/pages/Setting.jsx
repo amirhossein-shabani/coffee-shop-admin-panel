@@ -93,10 +93,11 @@ function Setting() {
 
   return (
     <>
-      <div></div>
-      <h1 className="pb-5 pr-1 text-xl font-bold text-coffee-dark/80">
-        تنظیمات
-      </h1>
+      {window.innerWidth >= 768 && (
+        <h1 className="pb-5 pr-1 text-xl font-bold text-coffee-dark/80">
+          تنظیمات
+        </h1>
+      )}
 
       <form
         onSubmit={handleSubmit(onSubmit)}
