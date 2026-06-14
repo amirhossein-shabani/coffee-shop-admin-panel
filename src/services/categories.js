@@ -56,17 +56,13 @@ export const updateCategoryImage = async (file, categoryId) => {
 };
 
 /* ========================== */
-/* Delete image (FIXED + LOG) */
+/* Delete image (FIXED) */
 /* ========================== */
 export const deleteCategoryImage = async (imageUrl) => {
   try {
     if (!imageUrl) return;
 
     const filePath = extractFilePath(imageUrl);
-
-    console.log("DELETE IMAGE:");
-    console.log("URL:", imageUrl);
-    console.log("PATH:", filePath);
 
     if (!filePath) return;
 
@@ -144,38 +140,63 @@ export const updateCategory = async ({
   updateCategoryData,
   imageFile,
   oldImgageUrl,
+  landingImageFile,
+  oldLandingImgageUrl,
 }) => {
   try {
     let newImageUrl = updateCategoryData.imgUrl;
+    let newLandingImageUrl = updateCategoryData.landingImageUrl;
 
-    // ✅ If we have a new image
+    // If we have any new images, upload them first
+    const uploadedNew = { img: false, landing: false };
+
     if (imageFile) {
-      // 1. Upload the new image
       newImageUrl = await updateCategoryImage(imageFile, id);
+      uploadedNew.img = true;
+    }
 
-      // 2. Update the database with the new image
+    if (landingImageFile) {
+      newLandingImageUrl = await updateCategoryImage(
+        landingImageFile,
+        `${id}-landing`,
+      );
+      uploadedNew.landing = true;
+    }
+
+    // If at least one new image was uploaded, update DB accordingly
+    if (uploadedNew.img || uploadedNew.landing) {
+      const updatePayload = { ...updateCategoryData };
+      if (uploadedNew.img) updatePayload.imgUrl = newImageUrl;
+      if (uploadedNew.landing)
+        updatePayload.landingImageUrl = newLandingImageUrl;
+
       const { data, error } = await supabase
         .from("categories")
-        .update({ ...updateCategoryData, imgUrl: newImageUrl })
+        .update(updatePayload)
         .eq("id", id)
         .select()
         .single();
 
       if (error) {
-        // rollback
-        await deleteCategoryImage(newImageUrl);
+        // rollback any uploaded images
+        if (uploadedNew.img) await deleteCategoryImage(newImageUrl);
+        if (uploadedNew.landing) await deleteCategoryImage(newLandingImageUrl);
         throw error;
       }
 
-      // 3. Delete the previous image (no strict condition)
-      if (oldImgageUrl) {
+      // delete replaced old images
+      if (uploadedNew.img && oldImgageUrl) {
         await deleteCategoryImage(oldImgageUrl);
+      }
+
+      if (uploadedNew.landing && oldLandingImgageUrl) {
+        await deleteCategoryImage(oldLandingImgageUrl);
       }
 
       return data;
     }
 
-    // ✅ If we don't have a new image
+    // If no new images, regular update
     const { data, error } = await supabase
       .from("categories")
       .update(updateCategoryData)
@@ -198,9 +219,14 @@ export const updateCategory = async ({
 /* ========================== */
 /* Add new category         */
 /* ========================== */
-export const addCategory = async ({ categoryData, imageFile }) => {
+export const addCategory = async ({
+  categoryData,
+  imageFile,
+  landingImageFile,
+}) => {
   try {
     let imgUrl = null;
+    let landingImageUrl = null;
     let displayOrder = 1;
 
     // Determine next display_order based on current highest value
@@ -220,11 +246,17 @@ export const addCategory = async ({ categoryData, imageFile }) => {
       displayOrder = lastCategory.display_order + 1;
     }
 
-    // If an image exists, upload it first
+    // If images exist, upload them first
+    const tempId = `temp-${Date.now()}`; // temporary id for naming the images
     if (imageFile) {
-      // Upload image and get url
-      const tempId = `temp-${Date.now()}`; // temporary id for naming the image
       imgUrl = await updateCategoryImage(imageFile, tempId);
+    }
+
+    if (landingImageFile) {
+      landingImageUrl = await updateCategoryImage(
+        landingImageFile,
+        `${tempId}-landing`,
+      );
     }
 
     // remove id and display_order from submitted data if present
@@ -233,13 +265,19 @@ export const addCategory = async ({ categoryData, imageFile }) => {
     // insert category data into the database
     const { data, error } = await supabase
       .from("categories")
-      .insert({ ...categoryDataWithoutId, imgUrl, display_order: displayOrder })
+      .insert({
+        ...categoryDataWithoutId,
+        imgUrl,
+        landingImageUrl,
+        display_order: displayOrder,
+      })
       .select()
       .single();
 
     if (error) {
-      // if an image was uploaded, delete it
+      // if images were uploaded, delete them
       if (imgUrl) await deleteCategoryImage(imgUrl);
+      if (landingImageUrl) await deleteCategoryImage(landingImageUrl);
       throw error;
     }
 
@@ -259,6 +297,9 @@ export const deleteCategory = async (href) => {
     const category = await getCategoryByHref(href);
     if (category?.imgUrl) {
       await deleteCategoryImage(category.imgUrl);
+    }
+    if (category?.landingImageUrl) {
+      await deleteCategoryImage(category.landingImageUrl);
     }
 
     // delete category from database

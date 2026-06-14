@@ -12,7 +12,6 @@ import FileUpload from "../components/FileUpload";
 import FormRow from "../components/FormRow";
 
 function Setting() {
-  console.count("Setting render");
   const { data, isLoading, error } = useSetting();
 
   const {
@@ -81,9 +80,6 @@ function Setting() {
       // 👇 مهم
       logoUrl: formData.logoUrl?.[0],
     };
-
-    console.log("logo file:", formData.logoUrl);
-    console.log(payload);
 
     updateSetting.mutate(payload);
   }

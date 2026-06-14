@@ -6,6 +6,8 @@ import { useDeleteMenuItem, useMenuItems } from "../hooks/useMenuItems";
 import SearchBar from "../components/SearchBar";
 import MenuLoading from "../components/MenuLoading";
 import AddItemButton from "../components/AddItemButton";
+import MobileItemContainer from "../components/MobileItemContainer";
+import WindowsItemContainer from "../components/WindowsItemContainer";
 
 function Menu() {
   const { data, isLoading, error } = useMenuItems();
@@ -56,58 +58,9 @@ function Menu() {
               className="w-[96%] md:w-[90%]  mr-4 flex items-center shadow-sm px-1 md:px-2 md:pr-1 py-1 bg-white  rounded-lg transition hover:scale-[1.02] hover:shadow-lg text-gray-700 hover:text-gray-900"
             >
               {window.innerWidth > 768 ? (
-                <div className="flex items-center flex-1 ">
-                  <div className="flex flex-row w-1/2 px-0 gap-x-3">
-                    <div className="flex self-center h-20 w-28">
-                      <img
-                        src={item.imgUrl}
-                        // alt={item.name}
-                        className="w-full rounded-md aspect-auto"
-                      />
-                    </div>
-
-                    <div className="flex flex-col justify-between w-full pt-0.5 gap-1 py-1">
-                      <p className="text-sm md:text-sm">{item.name}</p>
-                      <p className="text-sm text-red-900 md:text-sm w-fit">
-                        {item.price} تومان
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="flex w-[90%] self-start justify-start h-full py-1.5 px-2 pr-4">
-                    <p className="flex text-xs text-gray-500 ">
-                      {item.description}
-                    </p>
-                  </div>
-                </div>
+                <WindowsItemContainer item={item} />
               ) : (
-                <div className="flex items-center flex-1 ">
-                  <div className="flex flex-row w-full gap-x-3">
-                    <div className="w-16">
-                      <img
-                        src={item.imgUrl}
-                        // alt={item.name}
-                        className="w-full rounded-md aspect-auto "
-                      />
-                    </div>
-
-                    <div className="flex flex-col justify-between  p-1 w-[80%]">
-                      <div className="pt-0.5 ">
-                        <p className="pb-1 text-xs font-bold border-b w-[90%] md:text-sm border-coffee-dark/40 ">
-                          {item.name}
-                        </p>
-                      </div>
-
-                      <p className="w-full py-3 text-xs text-gray-500 ">
-                        {item.description}
-                      </p>
-
-                      <p className="text-xs text-red-900 md:text-sm w-fit">
-                        {item.price} تومان
-                      </p>
-                    </div>
-                  </div>
-                </div>
+                <MobileItemContainer item={item} />
               )}
               <div className="flex text-xl gap-x-2">
                 <button

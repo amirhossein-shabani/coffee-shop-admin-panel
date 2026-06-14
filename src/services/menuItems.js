@@ -80,9 +80,6 @@ export const deleteMenuItemImage = async (imageUrl) => {
 
     const filePath = extractFilePath(imageUrl);
 
-    console.log("DELETE IMAGE URL:", imageUrl);
-    console.log("DELETE FILE PATH:", filePath);
-
     if (!filePath) {
       console.warn("FILE PATH پیدا نشد");
       return;
@@ -103,8 +100,6 @@ export const deleteMenuItemImage = async (imageUrl) => {
       console.error("خطا در بررسی فایل:", listError);
     }
 
-    console.log("FILES IN BUCKET:", existingFiles);
-
     const fileExists = existingFiles?.some((file) => file.name === fileName);
 
     if (!fileExists) {
@@ -113,18 +108,14 @@ export const deleteMenuItemImage = async (imageUrl) => {
     }
 
     // delete file
-    const { data, error } = await supabase.storage
+    const { error } = await supabase.storage
       .from(BUCKET_NAME)
       .remove([filePath]);
-
-    console.log("DELETE RESULT:", data);
 
     if (error) {
       console.error("خطا در حذف فایل:", error);
       throw error;
     }
-
-    console.log("تصویر با موفقیت حذف شد");
   } catch (err) {
     console.error("خطای حذف تصویر:", err);
     throw err;

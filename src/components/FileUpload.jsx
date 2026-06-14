@@ -69,9 +69,6 @@ function FileUpload({
               className="object-cover w-full h-full rounded-xl"
               loading="lazy"
               decoding="async"
-              onLoad={(e) => {
-                console.log(e.target.naturalWidth, e.target.naturalHeight);
-              }}
             />
 
             <div className="absolute inset-0 flex items-center justify-center text-sm text-white opacity-0 bg-black/40 hover:opacity-100 rounded-xl">
