@@ -6,7 +6,7 @@ function MobileItemContainer({ item }) {
           <img
             src={item.imgUrl}
             // alt={item.name}
-            className="w-full rounded-md aspect-auto "
+            className="w-full h-full rounded-md aspect-auto "
           />
         </div>
 

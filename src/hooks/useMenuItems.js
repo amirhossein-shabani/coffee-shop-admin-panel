@@ -6,6 +6,7 @@ import {
   getMenuItems,
   // updateMenuItem,
   updateMenuItemWithImage,
+  updateSuggestedItems,
 } from "../services/menuItems";
 
 export function useMenuItems() {
@@ -62,6 +63,22 @@ export function useDeleteMenuItem() {
     mutationFn: ({ id, imageUrl }) => deleteMenuItemById({ id, imageUrl }),
     onSuccess: () => {
       queryClient.invalidateQueries(["menuItems"]);
+    },
+  });
+}
+
+export function useUpdateSuggestedItems(options = {}) {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: updateSuggestedItems,
+    onSuccess: () => {
+      queryClient.invalidateQueries(["menuItems"]);
+      options.onSuccess?.();
+    },
+    onError: (error) => {
+      console.error("خطای بروزرسانی آیتم‌های پیشنهادی:", error);
+      options.onError?.(error);
     },
   });
 }

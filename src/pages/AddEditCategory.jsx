@@ -14,7 +14,6 @@ function AddEditCategory() {
   const { href } = useParams();
   const navigate = useNavigate();
   const [preview, setPreview] = useState(null);
-  const [landingPreview, setLandingPreview] = useState(null);
   const isEdit = href !== "add" && !!href;
   const {
     data: category,
@@ -158,7 +157,6 @@ function AddEditCategory() {
             register={register}
             name="landingImageUrl"
             defaultImage={category?.landingImageUrl || null}
-            onPreviewChange={setLandingPreview}
           />
 
           {/* Buttons */}

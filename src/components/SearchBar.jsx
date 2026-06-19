@@ -3,7 +3,7 @@ import { MdClose } from "react-icons/md";
 
 function SearchBar({ value, onSearch, placeholder = "جستجو..." }) {
   return (
-    <div className="relative w-[80%] mr-4 ">
+    <div className="relative w-full ">
       <div className="relative flex items-center">
         <FiSearch className="absolute text-gray-400 right-3" size={20} />
 

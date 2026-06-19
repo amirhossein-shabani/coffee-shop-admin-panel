@@ -4,9 +4,9 @@ import PropTypes from "prop-types";
 
 function Layout() {
   return (
-    <div className="flex">
+    <div className="flex h-screen">
       <Sidebar />
-      <main className="flex-1 min-h-screen p-6 pt-24 md:p-8 bg-coffee-light/50">
+      <main className="flex-1 overflow-y-auto p-6 pt-24 md:p-8 bg-coffee-light/50">
         <Outlet />
       </main>
     </div>

@@ -1,6 +1,6 @@
 function WindowsItemContainer({ item }) {
   return (
-    <div className="flex items-center flex-1 ">
+    <div className="flex items-center flex-1  ">
       <div className="flex flex-row w-1/2 px-0 gap-x-3">
         <div className="flex self-center h-20 w-28">
           <img

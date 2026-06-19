@@ -1,6 +1,6 @@
 function AddItemButton({ navigate }) {
   return (
-    <div className="relative group w-[11%] md:w-[8%] mr-1">
+    <div className="relative group w-[30%] md:w-[8%] ">
       <button
         onClick={navigate}
         className="w-full flex items-center justify-center rounded-xl border border-gray-300 bg-white text-3xl text-gray-700 scale-95 transition hover:scale-100 pt-0.5"

@@ -298,3 +298,40 @@ export const deleteMenuItemById = async ({ id, imageUrl }) => {
     throw err;
   }
 };
+
+/* ========================== */
+/* update suggested items         */
+/* ========================== */
+export const updateSuggestedItems = async (suggestedIds) => {
+  try {
+    // Get all menu items
+    const { data: allItems, error: fetchError } = await supabase
+      .from("menuItems")
+      .select("id");
+
+    if (fetchError) throw fetchError;
+
+    // Set all items to suggested = false
+    const { error: resetError } = await supabase
+      .from("menuItems")
+      .update({ suggested: false })
+      .in("id", allItems.map((item) => item.id));
+
+    if (resetError) throw resetError;
+
+    // Set only selected items to suggested = true
+    if (suggestedIds.length > 0) {
+      const { error: updateError } = await supabase
+        .from("menuItems")
+        .update({ suggested: true })
+        .in("id", suggestedIds);
+
+      if (updateError) throw updateError;
+    }
+
+    return { success: true };
+  } catch (err) {
+    console.error("خطای آپدیت آیتم‌های پیشنهادی:", err);
+    throw err;
+  }
+};

@@ -38,7 +38,7 @@ function Categories() {
             <div className="absolute z-20 flex p-1 text-xs left-1 top-1 gap-x-2">
               <button
                 onClick={() => navigate(`/categories/${category.href}`)}
-                className="text-base text-gray-500 transition hover:text-green-500"
+                className="text-base text-gray-500 transition hover:text-green-500 md:hidden"
               >
                 <FiEdit />
               </button>

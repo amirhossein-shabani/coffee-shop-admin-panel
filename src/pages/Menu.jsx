@@ -2,16 +2,20 @@ import { Outlet, useNavigate } from "react-router-dom";
 import { useState, useMemo } from "react";
 import { FiEdit } from "react-icons/fi";
 import { MdDelete } from "react-icons/md";
+import { MdLocalOffer } from "react-icons/md";
 import { useDeleteMenuItem, useMenuItems } from "../hooks/useMenuItems";
 import SearchBar from "../components/SearchBar";
 import MenuLoading from "../components/MenuLoading";
 import AddItemButton from "../components/AddItemButton";
 import MobileItemContainer from "../components/MobileItemContainer";
 import WindowsItemContainer from "../components/WindowsItemContainer";
+import SuggestedItem from "../components/SuggestedItem";
+import Modal from "../components/Modal";
 
 function Menu() {
   const { data, isLoading, error } = useMenuItems();
   const [searchTerm, setSearchTerm] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const navigate = useNavigate();
 
@@ -34,28 +38,35 @@ function Menu() {
   if (error) return <div>خطا در بارگذاری آیتم‌های منو: {error.message}</div>;
 
   return (
-    <div className="space-y-4 ">
+    <div className="flex flex-col w-full gap-4">
       {window.innerWidth >= 768 && (
-        <h1 className="pb-5 pr-1 text-xl font-bold text-coffee-dark/80">
+        <h1 className="pb-5 pr-0 text-xl font-bold text-coffee-dark/80">
           صفحه منو
         </h1>
       )}
 
-      <div className="flex flex-row ">
+      <div className="flex flex-row w-full gap-1 px-0 pt-4 md:pt-0">
         <SearchBar
           value={searchTerm}
           onSearch={setSearchTerm}
           placeholder="جستجو آیتم..."
         />
+        <button
+          onClick={() => setIsModalOpen(true)}
+          className="flex items-center gap-2 px-2 py-2 text-sm font-medium transition rounded-lg bg-amber-100 hover:bg-amber-200 text-amber-800 whitespace-nowrap"
+        >
+          <MdLocalOffer className="text-lg" />
+          پیشنهادی
+        </button>
         <AddItemButton navigate={() => navigate("/menu/add")} />
       </div>
 
-      <div className="flex flex-col gap-2 pb-10 pl-2 scroll-container">
+      <div className="flex flex-col gap-2 p-2 px-1 pb-10 md:px-4 scroll-container">
         {filteredData?.length > 0 ? (
           filteredData.map((item) => (
             <div
               key={item.id}
-              className="w-[96%] md:w-[90%]  mr-4 flex items-center shadow-sm px-1 md:px-2 md:pr-1 py-1 bg-white  rounded-lg transition hover:scale-[1.02] hover:shadow-lg text-gray-700 hover:text-gray-900"
+              className="flex items-center w-full px-1 py-1 overflow-visible text-gray-700 transition bg-white rounded-lg shadow-sm md:px-2 md:pr-1 hover:shadow-lg hover:text-gray-900 hover:scale-[1.02]"
             >
               {window.innerWidth > 768 ? (
                 <WindowsItemContainer item={item} />
@@ -86,6 +97,13 @@ function Menu() {
         )}
       </div>
       <Outlet />
+
+      {/* Suggested Items Modal */}
+      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+        <div className="flex flex-col gap-4">
+          <SuggestedItem data={data} onSuccess={() => setIsModalOpen(false)} />
+        </div>
+      </Modal>
     </div>
   );
 }
