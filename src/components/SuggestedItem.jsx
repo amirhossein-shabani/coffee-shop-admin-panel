@@ -1,34 +1,38 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useMemo } from "react";
 import { useUpdateSuggestedItems } from "../hooks/useMenuItems";
 
 const MAX_SUGGESTED = 6;
 
+const areSameIds = (firstIds, secondIds) => {
+  firstIds.length === secondIds.length &&
+    // this line of logic check the equality of the ids and their order and if the ids and the order of the selected items are the same return true
+    firstIds.every((id, index) => id === secondIds[index]);
+};
+
 function SuggestedItem({ data, onSuccess }) {
-  const [selectedIds, setSelectedIds] = useState([]);
-  const [hasChanges, setHasChanges] = useState(false);
+  const [draftSelectedIds, setDraftSelectedIds] = useState(null);
   const updateMutation = useUpdateSuggestedItems();
 
-  // جدا کن items پیشنهادی و غیر پیشنهادی
-  const { suggestedItems, otherItems } = useMemo(() => {
-    if (!data) return { suggestedItems: [], otherItems: [] };
-
-    const suggested = data.filter((item) => item.suggested);
-    const other = data.filter((item) => !item.suggested);
-
-    return {
-      suggestedItems: suggested,
-      otherItems: other,
-    };
+  const initialSelectedIds = useMemo(() => {
+    if (!data) return [];
+    return data.filter((item) => item.suggested).map((item) => item.id);
   }, [data]);
 
-  // هنگام بارگذاری، suggested items را انتخاب کن
-  useEffect(() => {
-    const initialSelectedIds = suggestedItems.map((item) => item.id);
-    setSelectedIds(initialSelectedIds);
-  }, [suggestedItems]);
+  const selectedIds = draftSelectedIds ?? initialSelectedIds;
+
+  const hasChanges =
+    draftSelectedIds !== null &&
+    !areSameIds(draftSelectedIds, initialSelectedIds);
+
+  const otherItems = useMemo(() => {
+    if (!data) return [];
+
+    return data.filter((item) => !selectedIds.includes(item.id));
+  }, [data, selectedIds]);
 
   const handleCheckboxChange = (itemId, isChecked) => {
-    setSelectedIds((prevSelected) => {
+    setDraftSelectedIds((prevDraft) => {
+      const prevSelected = prevDraft ?? initialSelectedIds;
       let newSelected;
 
       if (isChecked) {
@@ -42,7 +46,6 @@ function SuggestedItem({ data, onSuccess }) {
         newSelected = prevSelected.filter((id) => id !== itemId);
       }
 
-      setHasChanges(true);
       return newSelected;
     });
   };
@@ -52,7 +55,7 @@ function SuggestedItem({ data, onSuccess }) {
 
     try {
       await updateMutation.mutateAsync(selectedIds);
-      setHasChanges(false);
+      setDraftSelectedIds(null);
       onSuccess?.();
     } catch (error) {
       console.error("خطا در ذخیره تغییرات:", error);
@@ -102,28 +105,33 @@ function SuggestedItem({ data, onSuccess }) {
         <div className="mb-4">
           <p className="mb-2 text-xs text-gray-500">سایر آیتم‌ها</p>
           <div className="grid grid-cols-1 gap-2 overflow-y-auto sm:grid-cols-2 max-h-56">
-            {otherItems.map((item) => (
-              <label
-                key={item.id}
-                className="flex items-center gap-2 p-2 transition rounded cursor-pointer bg-gray-50 hover:bg-gray-100 disabled:opacity-50"
-              >
-                <input
-                  type="checkbox"
-                  checked={selectedIds.includes(item.id)}
-                  onChange={(e) =>
-                    handleCheckboxChange(item.id, e.target.checked)
-                  }
-                  disabled={
-                    selectedIds.length >= MAX_SUGGESTED &&
-                    !selectedIds.includes(item.id)
-                  }
-                  className="w-4 h-4 accent-blue-500"
-                />
-                <span className="text-sm text-gray-700 truncate">
-                  {item.name}
-                </span>
-              </label>
-            ))}
+            {otherItems.map((item) => {
+              const isDisabled = selectedIds.length >= MAX_SUGGESTED;
+
+              return (
+                <label
+                  key={item.id}
+                  className={`flex items-center gap-2 p-2 transition rounded bg-gray-50 ${
+                    isDisabled
+                      ? "cursor-not-allowed opacity-50"
+                      : "cursor-pointer hover:bg-gray-100"
+                  }`}
+                >
+                  <input
+                    type="checkbox"
+                    checked={false}
+                    onChange={(e) =>
+                      handleCheckboxChange(item.id, e.target.checked)
+                    }
+                    disabled={isDisabled}
+                    className="w-4 h-4 accent-blue-500"
+                  />
+                  <span className="text-sm text-gray-700 truncate">
+                    {item.name}
+                  </span>
+                </label>
+              );
+            })}
           </div>
         </div>
       )}
