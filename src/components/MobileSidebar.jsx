@@ -19,7 +19,7 @@ function MobileSidebar({ isOpen, onClose }) {
           bg-coffee-dark/90 text-coffee-light
           md:hidden
 
-          transition-all duration-[400ms] ease-in-out
+          transition-all duration-[600ms] ease-in-out
 
           ${
             isOpen
@@ -28,7 +28,7 @@ function MobileSidebar({ isOpen, onClose }) {
           }
         `}
       >
-        <NavLinks />
+        <NavLinks onClose={onClose} />
       </aside>
     </>
   );

@@ -1,6 +1,6 @@
 import { NavLink } from "react-router-dom";
 
-function NavLinks() {
+function NavLinks({ onClose }) {
   return (
     <>
       <NavLink
@@ -8,6 +8,7 @@ function NavLinks() {
         className={({ isActive }) =>
           ` block p-3 rounded transition-transform duration-200 ${isActive ? "bg-coffee text-white font-bold scale-[1.02]" : "hover:bg-coffee/70"}`
         }
+        onClick={() => onClose?.()}
       >
         📊 داشبورد
       </NavLink>
@@ -16,6 +17,7 @@ function NavLinks() {
         className={({ isActive }) =>
           ` block p-3 rounded transition-transform duration-200 ${isActive ? "bg-coffee text-white font-bold scale-[1.02]" : "hover:bg-coffee/70"}`
         }
+        onClick={() => onClose?.()}
       >
         🍽️ منو
       </NavLink>
@@ -33,6 +35,7 @@ function NavLinks() {
         className={({ isActive }) =>
           ` block p-3 rounded transition-transform duration-200 ${isActive ? "bg-coffee text-white font-bold scale-[1.02]" : "hover:bg-coffee/70"}`
         }
+        onClick={() => onClose?.()}
       >
         🗂️ کتگوری ها
       </NavLink>
@@ -41,6 +44,7 @@ function NavLinks() {
         className={({ isActive }) =>
           ` block p-3 rounded transition-transform duration-200  ${isActive ? "bg-coffee text-white font-bold scale-[1.02]" : "hover:bg-coffee/70"}`
         }
+        onClick={() => onClose?.()}
       >
         ⚙️ تنظیمات
       </NavLink>

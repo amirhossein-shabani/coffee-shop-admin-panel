@@ -144,7 +144,7 @@ function AddEditCategory() {
 
           {/* Upload */}
           <FileUpload
-            label="تصویر دسته‌بندی"
+            label="آیکون دسته بندی "
             register={register}
             name="imgUrl"
             defaultImage={category?.imgUrl || null}
@@ -153,7 +153,7 @@ function AddEditCategory() {
 
           {/* Landing Image */}
           <FileUpload
-            label="تصویر لندینگ"
+            label="تصویر دسته بندی  "
             register={register}
             name="landingImageUrl"
             defaultImage={category?.landingImageUrl || null}
