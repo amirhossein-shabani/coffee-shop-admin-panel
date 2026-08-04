@@ -1,5 +1,6 @@
 import { useState, useMemo } from "react";
 import { useUpdateSuggestedItems } from "../hooks/useMenuItems";
+import { toastSuccess, toastError } from "../utils/swal";
 
 const MAX_SUGGESTED = 6;
 
@@ -56,9 +57,11 @@ function SuggestedItem({ data, onSuccess }) {
     try {
       await updateMutation.mutateAsync(selectedIds);
       setDraftSelectedIds(null);
+      toastSuccess("آیتم‌های پیشنهادی با موفقیت ذخیره شد.");
       onSuccess?.();
     } catch (error) {
       console.error("خطا در ذخیره تغییرات:", error);
+      toastError(error?.message || "خطا در ذخیره تغییرات");
     }
   };
 

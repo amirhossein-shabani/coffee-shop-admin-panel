@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { alert as swalAlert } from "../utils/swal";
 import { HiOutlineUpload } from "react-icons/hi";
 import { IoClose } from "react-icons/io5";
 
@@ -26,7 +27,7 @@ function FileUpload({
     if (!file) return;
 
     if (file.size > maxSize) {
-      alert(`حداکثر ${maxSize / (1024 * 1024)}MB`);
+      swalAlert("حجم فایل زیاد است", `حداکثر ${maxSize / (1024 * 1024)}MB`);
       e.target.value = "";
       return;
     }

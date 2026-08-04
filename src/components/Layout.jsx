@@ -1,6 +1,5 @@
 import { Outlet } from "react-router-dom";
 import Sidebar from "./Sidebar";
-import PropTypes from "prop-types";
 
 function Layout() {
   return (
@@ -12,9 +11,5 @@ function Layout() {
     </div>
   );
 }
-
-Layout.propTypes = {
-  children: PropTypes.node.isRequired,
-};
 
 export default Layout;

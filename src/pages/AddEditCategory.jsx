@@ -5,6 +5,7 @@ import {
   useCategory,
   useUpdateCategory,
 } from "../hooks/useCategories";
+import { toastSuccess, toastError } from "../utils/swal";
 import Modal from "../components/Modal";
 import { useEffect, useState } from "react";
 import FileUpload from "../components/FileUpload";
@@ -23,14 +24,18 @@ function AddEditCategory() {
 
   const { mutate: addCategory, isPending: isAdding } = useAddCategory({
     onSuccess: () => {
+      toastSuccess("دسته‌بندی با موفقیت اضافه شد.");
       navigate("/categories");
     },
+    onError: (err) => toastError(err?.message || "خطا در افزودن دسته‌بندی."),
   });
 
   const { mutate: updateCategory, isPending: isUpdating } = useUpdateCategory({
     onSuccess: () => {
+      toastSuccess("دسته‌بندی با موفقیت بروزرسانی شد.");
       navigate("/categories");
     },
+    onError: (err) => toastError(err?.message || "خطا در بروزرسانی دسته‌بندی."),
   });
 
   const isPending = isUpdating || isAdding;

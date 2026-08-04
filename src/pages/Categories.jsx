@@ -1,6 +1,11 @@
 import { MdDelete } from "react-icons/md";
 import { useNavigate, Outlet } from "react-router-dom";
 import { useCategoies, useDeleteCategory } from "../hooks/useCategories";
+import {
+  confirm as swalConfirm,
+  toastSuccess,
+  toastError,
+} from "../utils/swal";
 import CategoriesLoading from "../components/CategoriesLoading";
 import { FiEdit } from "react-icons/fi";
 
@@ -44,11 +49,20 @@ function Categories() {
               </button>
               {/* دکمه حذف */}
               <button
-                onClick={(e) => {
+                onClick={async (e) => {
                   e.stopPropagation();
-                  confirm(
-                    "آیا مطمئن هستید که می‌خواهید این دسته‌بندی را حذف کنید؟",
-                  ) && deleteCategory(category.href);
+                  const ok = await swalConfirm({
+                    title: "حذف دسته‌بندی",
+                    text: "آیا مطمئن هستید که می‌خواهید این دسته‌بندی را حذف کنید؟",
+                  });
+
+                  if (!ok) return;
+
+                  deleteCategory(category.href, {
+                    onSuccess: () => toastSuccess("دسته‌بندی حذف شد."),
+                    onError: (err) =>
+                      toastError(err?.message || "خطا در حذف دسته‌بندی."),
+                  });
                 }}
                 className="text-gray-500 transition hover:text-red-500"
               >

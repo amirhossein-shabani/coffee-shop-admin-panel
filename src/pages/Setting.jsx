@@ -1,5 +1,6 @@
 import { useForm } from "react-hook-form";
 import { useSetting, useUpdateSetting } from "../hooks/useSetting";
+import { toastSuccess, toastError } from "../utils/swal";
 import { useEffect } from "react";
 import FormButton from "../components/FormButton";
 import SettingsLoading from "../components/SettingLoading";
@@ -31,8 +32,10 @@ function Setting() {
         };
 
         reset(mapped);
+        toastSuccess("تنظیمات با موفقیت ذخیره شد.");
       }
     },
+    onError: (err) => toastError(err?.message || "خطا در ذخیره تنظیمات."),
   });
 
   useEffect(() => {

@@ -2,16 +2,24 @@ import NavLinks from "./NavLinks";
 import { useState } from "react";
 import MobileSidebar from "./MobileSidebar";
 import { GiHamburgerMenu } from "react-icons/gi";
-import { useMatches } from "react-router-dom";
+import { useMatches, useNavigate } from "react-router-dom";
+import { useAuth } from "../hooks/useAuth";
 
 function Sidebar() {
   const [isOpen, setIsOpen] = useState(false);
 
   const matches = useMatches();
+  const navigate = useNavigate();
+  const { logout, logoutLoading } = useAuth();
 
   const lastMatch = matches[matches.length - 1];
 
   const title = lastMatch?.handle?.title || "مدیریت کافه";
+
+  const handleLogout = async () => {
+    await logout();
+    navigate("/login", { replace: true });
+  };
 
   return (
     <>
@@ -47,7 +55,12 @@ function Sidebar() {
         </div>
       </div>
 
-      <MobileSidebar isOpen={isOpen} onClose={() => setIsOpen(false)} />
+      <MobileSidebar
+        isOpen={isOpen}
+        logoutLoading={logoutLoading}
+        onClose={() => setIsOpen(false)}
+        onLogout={handleLogout}
+      />
 
       <aside
         dir="rtl"
@@ -61,7 +74,12 @@ function Sidebar() {
             <NavLinks />
           </nav>
         </div>
-        <button className="w-full p-3 mt-auto text-right rounded hover:bg-coffee/80">
+        <button
+          type="button"
+          onClick={handleLogout}
+          disabled={logoutLoading}
+          className="w-full p-3 mt-auto text-right rounded hover:bg-coffee/80 disabled:cursor-not-allowed disabled:opacity-70"
+        >
           🚪 خارج شدن
         </button>
       </aside>

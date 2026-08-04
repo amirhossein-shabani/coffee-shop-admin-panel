@@ -1,14 +1,23 @@
+import { useAuth } from "../hooks/useAuth";
+import { useProfile } from "../hooks/useProfile";
 import { useSetting } from "../hooks/useSetting";
 
 function Dashboard() {
   const { data, isLoading, error } = useSetting();
-  if (isLoading)
+  const { user, loading: authLoading } = useAuth();
+  const {
+    data: userProfile,
+    isLoading: isLoadingProfile,
+    error: profileError,
+  } = useProfile(user?.id);
+
+  if (isLoading || isLoadingProfile || authLoading)
     return (
       <div className="p-4 text-3xl font-bold text-gray-700">
         لطفا صبر کنید ...
       </div>
     );
-  if (error)
+  if (error || profileError)
     return (
       <div className="p-4 text-2xl font-bold text-gray-700">
         مشکلی دربارگذاری دیتا پیش امده است ...
@@ -23,8 +32,11 @@ function Dashboard() {
         </h1>
       )}
       <h2 className="text-xl font-bold text-gray-700 ">
-        خوش امدی {data.AdminName} 😊
+        خوش آمدی {userProfile?.userName ?? "کاربر"} 😊
       </h2>
+      {userProfile?.description && (
+        <p className="mt-2 text-sm text-gray-500">{userProfile.description}</p>
+      )}
     </div>
   );
 }

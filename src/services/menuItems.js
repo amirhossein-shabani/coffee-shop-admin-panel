@@ -315,7 +315,10 @@ export const updateSuggestedItems = async (suggestedIds) => {
     const { error: resetError } = await supabase
       .from("menuItems")
       .update({ suggested: false })
-      .in("id", allItems.map((item) => item.id));
+      .in(
+        "id",
+        allItems.map((item) => item.id),
+      );
 
     if (resetError) throw resetError;
 

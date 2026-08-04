@@ -5,6 +5,7 @@ import {
   useUpdateMenuItemWithImage,
   useAddMenuItemWithImage,
 } from "../hooks/useMenuItems";
+import { toastSuccess, toastError } from "../utils/swal";
 import { useCategoies } from "../hooks/useCategories";
 import Modal from "../components/Modal";
 import { useEffect, useState } from "react";
@@ -23,13 +24,18 @@ function AddEditItem() {
   const { mutate: updateItem, isPending: isUpdating } =
     useUpdateMenuItemWithImage({
       onSuccess: () => {
+        toastSuccess("آیتم با موفقیت به‌روز شد.");
         navigate("/menu");
       },
+      onError: (err) => toastError(err?.message || "خطا در بروزرسانی آیتم."),
     });
+
   const { mutate: addItem, isPending: isAdding } = useAddMenuItemWithImage({
     onSuccess: () => {
+      toastSuccess("آیتم با موفقیت اضافه شد.");
       navigate("/menu");
     },
+    onError: (err) => toastError(err?.message || "خطا در افزودن آیتم."),
   });
   const isPending = isUpdating || isAdding;
 

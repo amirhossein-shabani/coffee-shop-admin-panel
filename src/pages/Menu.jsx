@@ -4,6 +4,11 @@ import { FiEdit } from "react-icons/fi";
 import { MdDelete } from "react-icons/md";
 import { MdLocalOffer } from "react-icons/md";
 import { useDeleteMenuItem, useMenuItems } from "../hooks/useMenuItems";
+import {
+  confirm as swalConfirm,
+  toastSuccess,
+  toastError,
+} from "../utils/swal";
 import SearchBar from "../components/SearchBar";
 import MenuLoading from "../components/MenuLoading";
 import AddItemButton from "../components/AddItemButton";
@@ -28,10 +33,20 @@ function Menu() {
 
   const deleteMenuItemMutation = useDeleteMenuItem();
 
-  function handleDelete(id, imageUrl) {
-    if (window.confirm("آیا از حذف این آیتم مطمئن هستید؟")) {
-      deleteMenuItemMutation.mutate({ id, imageUrl });
-    }
+  async function handleDelete(id, imageUrl) {
+    const ok = await swalConfirm({
+      title: "حذف آیتم",
+      text: "آیا از حذف این آیتم مطمئن هستید؟",
+    });
+    if (!ok) return;
+
+    deleteMenuItemMutation.mutate(
+      { id, imageUrl },
+      {
+        onSuccess: () => toastSuccess("آیتم با موفقیت حذف شد."),
+        onError: (err) => toastError(err?.message || "خطا در حذف آیتم."),
+      },
+    );
   }
 
   if (isLoading) return <MenuLoading />;

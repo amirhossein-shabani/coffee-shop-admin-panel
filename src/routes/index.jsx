@@ -3,6 +3,8 @@
 import { lazy } from "react";
 import { createBrowserRouter } from "react-router-dom";
 import Layout from "../components/Layout";
+import ProtectedRoute from "../components/ProtectedRoute";
+import { AUTHORIZED_ROLES } from "../constants/authRoles";
 
 const Dashboard = lazy(() => import("../pages/Dashboard"));
 const Login = lazy(() => import("../pages/Login"));
@@ -11,6 +13,7 @@ const Categories = lazy(() => import("../pages/Categories"));
 const Setting = lazy(() => import("../pages/Setting"));
 const AddEditItem = lazy(() => import("../pages/AddEditItem"));
 const AddEditCategory = lazy(() => import("../pages/AddEditCategory"));
+const NotAuthorized = lazy(() => import("../pages/NotAuthorized"));
 
 export const router = createBrowserRouter([
   {
@@ -19,8 +22,21 @@ export const router = createBrowserRouter([
     handle: { title: "ورود" },
   },
   {
+    path: "/not-authorized",
+    element: (
+      <ProtectedRoute>
+        <NotAuthorized />
+      </ProtectedRoute>
+    ),
+    handle: { title: "Access denied" },
+  },
+  {
     path: "/",
-    element: <Layout />,
+    element: (
+      <ProtectedRoute allowedRoles={AUTHORIZED_ROLES}>
+        <Layout />
+      </ProtectedRoute>
+    ),
     children: [
       {
         index: true,

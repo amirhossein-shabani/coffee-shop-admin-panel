@@ -1,6 +1,6 @@
 import NavLinks from "./NavLinks";
 
-function MobileSidebar({ isOpen, onClose }) {
+function MobileSidebar({ isOpen, logoutLoading, onClose, onLogout }) {
   return (
     <>
       {/* backdrop */}
@@ -29,6 +29,14 @@ function MobileSidebar({ isOpen, onClose }) {
         `}
       >
         <NavLinks onClose={onClose} />
+        <button
+          type="button"
+          onClick={onLogout}
+          disabled={logoutLoading}
+          className="w-full p-3 mt-6 text-right rounded disabled:cursor-not-allowed disabled:opacity-70 "
+        >
+          خارج شدن
+        </button>
       </aside>
     </>
   );

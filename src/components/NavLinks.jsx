@@ -6,7 +6,7 @@ function NavLinks({ onClose }) {
       <NavLink
         to="/"
         className={({ isActive }) =>
-          ` block p-3 rounded transition-transform duration-200 ${isActive ? "bg-coffee text-white font-bold scale-[1.02]" : "hover:bg-coffee/70"}`
+          ` block p-3 rounded transition-transform duration-200 ${isActive ? "bg-coffee text-white font-bold scale-[1.02]" : "md:hover:bg-coffee/70"}`
         }
         onClick={() => onClose?.()}
       >
@@ -15,7 +15,7 @@ function NavLinks({ onClose }) {
       <NavLink
         to="/menu"
         className={({ isActive }) =>
-          ` block p-3 rounded transition-transform duration-200 ${isActive ? "bg-coffee text-white font-bold scale-[1.02]" : "hover:bg-coffee/70"}`
+          ` block p-3 rounded transition-transform duration-200 ${isActive ? "bg-coffee text-white font-bold scale-[1.02]" : "md:hover:bg-coffee/70"}`
         }
         onClick={() => onClose?.()}
       >
@@ -33,7 +33,7 @@ function NavLinks({ onClose }) {
       <NavLink
         to="/categories"
         className={({ isActive }) =>
-          ` block p-3 rounded transition-transform duration-200 ${isActive ? "bg-coffee text-white font-bold scale-[1.02]" : "hover:bg-coffee/70"}`
+          ` block p-3 rounded transition-transform duration-200 ${isActive ? "bg-coffee text-white font-bold scale-[1.02]" : "md:hover:bg-coffee/70"}`
         }
         onClick={() => onClose?.()}
       >
@@ -42,7 +42,7 @@ function NavLinks({ onClose }) {
       <NavLink
         to="/setting"
         className={({ isActive }) =>
-          ` block p-3 rounded transition-transform duration-200  ${isActive ? "bg-coffee text-white font-bold scale-[1.02]" : "hover:bg-coffee/70"}`
+          ` block p-3 rounded transition-transform duration-200  ${isActive ? "bg-coffee text-white font-bold scale-[1.02]" : "md:hover:bg-coffee/70"}`
         }
         onClick={() => onClose?.()}
       >
