@@ -96,8 +96,7 @@ export function AuthProvider({ children }) {
   const isAuthorized = AUTHORIZED_ROLES.includes(role);
 
   // ⏳ Loading state
-  const loading =
-    isBootstrapping || (Boolean(user) && !profile && isProfileFetching);
+  const loading = isBootstrapping || (Boolean(user) && !profile);
 
   // 📦 Context value
   const value = useMemo(
