@@ -11,9 +11,11 @@ import SocialInput, {
 } from "../components/SocialInput";
 import FileUpload from "../components/FileUpload";
 import FormRow from "../components/FormRow";
+import { useAuth } from "../hooks/useAuth";
 
 function Setting() {
   const { data, isLoading, error } = useSetting();
+  const { isViewer } = useAuth();
 
   const {
     register,
@@ -213,10 +215,14 @@ function Setting() {
 
         <FormButton
           type="submit"
-          extraClass="self-end"
-          disabled={!isDirty || updateSetting.isPending}
+          extraClass="self-end disabled:bg-gray-500 disabled:cursor-not-allowed disabled:opacity-50"
+          disabled={!isDirty || updateSetting.isPending || isViewer}
         >
-          {updateSetting.isPending ? "درحال ذخیره..." : "ذخیره اطلاعات"}
+          {isViewer
+            ? "شما اجازه تغییر تنظیمات را ندارید "
+            : updateSetting.isPending
+              ? "درحال ذخیره..."
+              : "ذخیره اطلاعات"}
         </FormButton>
 
         {updateSetting.error && (

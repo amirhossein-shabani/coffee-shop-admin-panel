@@ -1,6 +1,7 @@
 import { useState, useMemo } from "react";
 import { useUpdateSuggestedItems } from "../hooks/useMenuItems";
 import { toastSuccess, toastError } from "../utils/swal";
+import { useAuth } from "../hooks/useAuth";
 
 const MAX_SUGGESTED = 6;
 
@@ -20,6 +21,8 @@ function SuggestedItem({ data, onSuccess }) {
   }, [data]);
 
   const selectedIds = draftSelectedIds ?? initialSelectedIds;
+
+  const { isViewer } = useAuth();
 
   const hasChanges =
     draftSelectedIds !== null &&
@@ -90,6 +93,7 @@ function SuggestedItem({ data, onSuccess }) {
                   <input
                     type="checkbox"
                     checked={true}
+                    disabled={isViewer}
                     onChange={(e) => handleCheckboxChange(id, e.target.checked)}
                     className="w-4 h-4 accent-green-500"
                   />
@@ -126,7 +130,7 @@ function SuggestedItem({ data, onSuccess }) {
                     onChange={(e) =>
                       handleCheckboxChange(item.id, e.target.checked)
                     }
-                    disabled={isDisabled}
+                    disabled={isDisabled || isViewer}
                     className="w-4 h-4 accent-blue-500"
                   />
                   <span className="text-sm text-gray-700 truncate">
@@ -143,10 +147,18 @@ function SuggestedItem({ data, onSuccess }) {
       <div className="flex gap-2">
         <button
           onClick={handleSave}
-          disabled={!hasChanges || isLoading}
+          disabled={!hasChanges || isLoading || isViewer}
           className="flex-1 px-3 py-2 text-sm text-white transition bg-blue-500 rounded hover:bg-blue-600 disabled:bg-gray-300 disabled:cursor-not-allowed"
         >
-          {isLoading ? "درحال ذخیره..." : "ذخیره تغییرات"}
+          {isViewer ? (
+            <span className="text-sm font-bold text-red-500 opacity-100">
+              شما اجازه تغییر ایتم های پیشنهادی را ندارید .
+            </span>
+          ) : isLoading ? (
+            "درحال ذخیره..."
+          ) : (
+            "ذخیره تغییرات"
+          )}
         </button>
         {hasChanges && (
           <span className="flex items-center text-xs text-orange-500">

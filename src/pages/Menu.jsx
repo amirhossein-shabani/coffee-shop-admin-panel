@@ -16,6 +16,7 @@ import MobileItemContainer from "../components/MobileItemContainer";
 import WindowsItemContainer from "../components/WindowsItemContainer";
 import SuggestedItem from "../components/SuggestedItem";
 import Modal from "../components/Modal";
+import { useAuth } from "../hooks/useAuth";
 
 function Menu() {
   const { data, isLoading, error } = useMenuItems();
@@ -23,6 +24,8 @@ function Menu() {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const navigate = useNavigate();
+
+  const { isViewer } = useAuth();
 
   // فیلتر بهینه شده با useMemo
   const filteredData = useMemo(() => {
@@ -98,7 +101,8 @@ function Menu() {
 
                 <button
                   onClick={() => handleDelete(item.id, item.imgUrl)}
-                  className="transition hover:text-red-500"
+                  disabled={isViewer}
+                  className="transition hover:text-red-500 disabled:opacity-50 disabled:hover:text-gray-700 disabled:cursor-not-allowed"
                 >
                   <MdDelete />
                 </button>

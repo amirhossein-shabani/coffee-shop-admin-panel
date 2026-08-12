@@ -12,6 +12,7 @@ import { useEffect, useState } from "react";
 import FileUpload from "../components/FileUpload";
 import { FormInput } from "../components/FormInput";
 import { FormTextarea } from "../components/FormTextarea";
+import { useAuth } from "../hooks/useAuth";
 
 function AddEditItem() {
   const { id } = useParams();
@@ -38,6 +39,8 @@ function AddEditItem() {
     onError: (err) => toastError(err?.message || "خطا در افزودن آیتم."),
   });
   const isPending = isUpdating || isAdding;
+
+  const { isViewer } = useAuth();
 
   const {
     register,
@@ -190,17 +193,26 @@ function AddEditItem() {
 
           {/* Buttons */}
           <div className="flex justify-end gap-3 pt-2">
+            {isViewer && (
+              <p className="flex self-center text-sm font-bold text-red-700 opacity-80">
+                {isEdit
+                  ? "شما اجازه تغییر ایتم ها را ندارید ."
+                  : " شما اجازه اضاف کردن ایتم  را ندارید ."}
+              </p>
+            )}
             <button
               type="button"
+              disabled={isViewer}
               onClick={() => navigate("/menu")}
-              className="px-4 py-2 text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300"
+              className="px-4 py-2 text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300 disabled:opacity-50 disabled:hover:bg-gray-200"
             >
               انصراف
             </button>
 
             <button
               type="submit"
-              className="px-4 py-2 text-white rounded-lg bg-coffee-dark hover:opacity-90"
+              disabled={isViewer}
+              className={`px-4 py-2 text-white rounded-lg bg-coffee-dark hover:opacity-90 disabled:opacity-50 `}
             >
               {isPending ? "درحال ذخیره ..." : isEdit ? "ذخیره" : "اضافه کردن"}
             </button>

@@ -8,11 +8,14 @@ import {
 } from "../utils/swal";
 import CategoriesLoading from "../components/CategoriesLoading";
 import { FiEdit } from "react-icons/fi";
+import { useAuth } from "../hooks/useAuth";
 
 function Categories() {
   const { data, isLoading, error } = useCategoies();
   const { mutate: deleteCategory, isPending: isDeleting } = useDeleteCategory();
   const navigate = useNavigate();
+
+  const { isViewer } = useAuth();
 
   if (isLoading || isDeleting) return <CategoriesLoading />;
   if (error) return <div>خطا در بارگذاری دسته‌بندی‌ها: {error.message}</div>;
@@ -64,7 +67,8 @@ function Categories() {
                       toastError(err?.message || "خطا در حذف دسته‌بندی."),
                   });
                 }}
-                className="text-gray-500 transition hover:text-red-500"
+                disabled={isViewer}
+                className="text-gray-500 transition hover:text-red-500 disabled:opacity-50 disabled:hover:text-gray-500 disabled:cursor-not-allowed"
               >
                 <MdDelete size={18} />
               </button>
