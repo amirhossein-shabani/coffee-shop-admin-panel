@@ -20,24 +20,24 @@ export default function WelcomeCard({ isViewer }) {
         </div>
       </div>
 
-      <div className="flex items-center w-full gap-2 mt-3 md:justify-center md:gap-x-4 md:mt-0">
+      <div className="flex items-center w-full gap-2 mt-3 overflow-x-auto md:justify-center md:gap-x-4 md:mt-0">
         <button
           onClick={() => navigate("/menu")}
           className="flex-1 px-2 py-1 text-sm text-white bg-blue-500 rounded text-nowrap hover:bg-blue-600"
         >
-          {isViewer ? "نمایش منو" : "مدیریت منو"}
+          منو
         </button>
         <button
           onClick={() => navigate("/categories")}
           className="flex-1 px-2 py-1 text-sm rounded text-nowrap bg-amber-100 text-amber-800 hover:bg-amber-200"
         >
-          {isViewer ? "نمایش دسته‌بندی‌ها" : "مدیریت دسته‌بندی‌ها"}
+          دسته‌بندی‌ها
         </button>
         <button
           onClick={() => navigate("/setting")}
           className="flex-1 px-2 py-1 text-sm text-gray-800 bg-gray-100 rounded text-nowrap hover:bg-gray-200"
         >
-          {isViewer ? "نمایش تنظیمات" : "مدیریت تنظیمات"}
+          تنظیمات
         </button>
       </div>
     </div>
