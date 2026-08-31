@@ -29,6 +29,14 @@ function Modal({ isOpen, onClose, children }) {
 
       {/* Modal Content */}
       <div className="relative z-10 w-[90%] max-w-lg p-3 bg-white shadow-xl rounded-2xl animate-scaleIn">
+        {/* Close button (moved to left and made more visible) */}
+        <button
+          onClick={onClose}
+          aria-label="بستن"
+          className="absolute flex items-center justify-center text-white transition bg-gray-500 rounded-full shadow-md top-3 left-3 w-9 h-9 hover:bg-gray-700"
+        >
+          ×
+        </button>
         {children}
       </div>
     </div>,

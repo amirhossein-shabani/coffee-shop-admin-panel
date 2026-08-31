@@ -2,7 +2,6 @@ import { Outlet, useNavigate } from "react-router-dom";
 import { useState, useMemo } from "react";
 import { FiEdit } from "react-icons/fi";
 import { MdDelete } from "react-icons/md";
-import { MdLocalOffer } from "react-icons/md";
 import { useDeleteMenuItem, useMenuItems } from "../hooks/useMenuItems";
 import {
   confirm as swalConfirm,
@@ -14,14 +13,12 @@ import MenuLoading from "../components/MenuLoading";
 import AddItemButton from "../components/AddItemButton";
 import MobileItemContainer from "../components/MobileItemContainer";
 import WindowsItemContainer from "../components/WindowsItemContainer";
-import SuggestedItem from "../components/SuggestedItem";
-import Modal from "../components/Modal";
+// SuggestedItem moved to Dashboard
 import { useAuth } from "../hooks/useAuth";
 
 function Menu() {
   const { data, isLoading, error } = useMenuItems();
   const [searchTerm, setSearchTerm] = useState("");
-  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const navigate = useNavigate();
 
@@ -69,13 +66,7 @@ function Menu() {
           onSearch={setSearchTerm}
           placeholder="جستجو آیتم..."
         />
-        <button
-          onClick={() => setIsModalOpen(true)}
-          className="flex items-center gap-2 px-2 py-2 text-sm font-medium transition rounded-lg bg-amber-100 hover:bg-amber-200 text-amber-800 whitespace-nowrap"
-        >
-          <MdLocalOffer className="text-lg" />
-          پیشنهادی
-        </button>
+        {/* Suggested items management moved to Dashboard */}
         <AddItemButton navigate={() => navigate("/menu/add")} />
       </div>
 
@@ -117,12 +108,7 @@ function Menu() {
       </div>
       <Outlet />
 
-      {/* Suggested Items Modal */}
-      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-        <div className="flex flex-col gap-4">
-          <SuggestedItem data={data} onSuccess={() => setIsModalOpen(false)} />
-        </div>
-      </Modal>
+      {/* Suggested items have been moved to the Dashboard */}
     </div>
   );
 }
