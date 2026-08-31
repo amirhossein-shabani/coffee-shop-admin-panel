@@ -338,3 +338,43 @@ export const updateSuggestedItems = async (suggestedIds) => {
     throw err;
   }
 };
+
+/* ========================== */
+/* update availability (is_available=false for selected ids) */
+/* ========================== */
+export const updateAvailability = async (unavailableIds) => {
+  try {
+    // Get all menu items ids
+    const { data: allItems, error: fetchError } = await supabase
+      .from("menuItems")
+      .select("id");
+
+    if (fetchError) throw fetchError;
+
+    // Set all items to is_available = true
+    const { error: resetError } = await supabase
+      .from("menuItems")
+      .update({ is_available: true })
+      .in(
+        "id",
+        allItems.map((item) => item.id),
+      );
+
+    if (resetError) throw resetError;
+
+    // Set only selected items to is_available = false
+    if (unavailableIds.length > 0) {
+      const { error: updateError } = await supabase
+        .from("menuItems")
+        .update({ is_available: false })
+        .in("id", unavailableIds);
+
+      if (updateError) throw updateError;
+    }
+
+    return { success: true };
+  } catch (err) {
+    console.error("خطای آپدیت وضعیت موجودی آیتم‌ها:", err);
+    throw err;
+  }
+};

@@ -148,10 +148,10 @@ function SuggestedItem({ data, onSuccess }) {
         <button
           onClick={handleSave}
           disabled={!hasChanges || isLoading || isViewer}
-          className="flex-1 px-3 py-2 text-sm text-white transition bg-blue-500 rounded hover:bg-blue-600 disabled:bg-gray-300 disabled:cursor-not-allowed"
+          className="flex-1 px-3 py-2 text-sm text-white transition bg-blue-500 rounded hover:bg-blue-600 disabled:bg-gray-100 disabled:cursor-not-allowed"
         >
           {isViewer ? (
-            <span className="text-sm font-bold text-red-500 opacity-100">
+            <span className="text-sm text-red-600">
               شما اجازه تغییر ایتم های پیشنهادی را ندارید .
             </span>
           ) : isLoading ? (

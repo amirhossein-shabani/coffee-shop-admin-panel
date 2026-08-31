@@ -7,6 +7,7 @@ import {
   // updateMenuItem,
   updateMenuItemWithImage,
   updateSuggestedItems,
+  updateAvailability,
 } from "../services/menuItems";
 
 export function useMenuItems() {
@@ -78,6 +79,22 @@ export function useUpdateSuggestedItems(options = {}) {
     },
     onError: (error) => {
       console.error("خطای بروزرسانی آیتم‌های پیشنهادی:", error);
+      options.onError?.(error);
+    },
+  });
+}
+
+export function useUpdateAvailability(options = {}) {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (unavailableIds) => updateAvailability(unavailableIds),
+    onSuccess: () => {
+      queryClient.invalidateQueries(["menuItems"]);
+      options.onSuccess?.();
+    },
+    onError: (error) => {
+      console.error("خطای بروزرسانی موجودی آیتم‌ها:", error);
       options.onError?.(error);
     },
   });

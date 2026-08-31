@@ -83,9 +83,9 @@ function Categories() {
 
             {/* تصویر */}
             <img
-              src={category.imgUrl || null}
-              alt={category.categoryTitle}
-              className="object-contain w-24 h-24 ml-4 scale-150 rounded-lg"
+              src={category.imgUrl || category.landingImageUrl || null}
+              alt={null}
+              className="object-contain w-24 h-24 ml-4 scale-100 rounded-lg"
             />
 
             {/* Glass Hover Overlay */}
