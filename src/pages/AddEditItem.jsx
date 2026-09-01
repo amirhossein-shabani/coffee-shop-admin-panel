@@ -114,9 +114,9 @@ function AddEditItem() {
 
   return (
     <Modal isOpen={true} onClose={() => navigate("/menu")}>
-      <div className="relative w-full max-w-md mx-auto bg-white rounded-2xl sm:max-w-lg md:max-w-xl">
+      <div className="relative w-full px-2 py-4 mx-auto bg-white rounded-2xl ">
         {/* Header */}
-        <div className="flex items-center gap-3 mb-4">
+        <div className="flex items-center gap-3 pt-2 mb-4 mr-4">
           <img
             src={preview || (isEdit ? item?.imgUrl : null)}
             alt={isEdit ? item?.name : "New Item"}
@@ -192,7 +192,7 @@ function AddEditItem() {
           />
 
           {/* Buttons */}
-          <div className="flex justify-end gap-3 pt-2">
+          <div className="flex justify-end gap-3 p-2">
             {isViewer && (
               <p className="flex self-center text-xs font-bold text-red-700 opacity-80">
                 {isEdit

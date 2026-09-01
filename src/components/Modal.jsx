@@ -28,7 +28,7 @@ function Modal({ isOpen, onClose, children }) {
       />
 
       {/* Modal Content */}
-      <div className="relative z-10 w-[90%] max-w-lg p-3 bg-white shadow-xl rounded-2xl animate-scaleIn scale-90">
+      <div className="relative z-10 w-[90%] max-w-lg bg-white shadow-xl rounded-2xl animate-scaleIn scale-90">
         {/* Close button (moved to left and made more visible) */}
         <button
           onClick={onClose}

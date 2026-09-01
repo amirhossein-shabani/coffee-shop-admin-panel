@@ -110,9 +110,9 @@ function AddEditCategory() {
 
   return (
     <Modal isOpen={true} onClose={() => navigate("/categories")}>
-      <div className="relative w-full max-w-md py-4 mx-auto bg-white rounded-2xl">
+      <div className="relative w-full px-2 py-4 mx-auto bg-white rounded-2xl ">
         {/* Header */}
-        <div className="flex items-center gap-3 mb-4">
+        <div className="flex items-center gap-3 pt-2 mb-4 mr-4">
           <img
             src={preview || category?.imgUrl || null}
             alt={category?.categoryTitle}
@@ -168,7 +168,7 @@ function AddEditCategory() {
           />
 
           {/* Buttons */}
-          <div className="flex justify-end gap-3 pt-2">
+          <div className="flex justify-end gap-3 p-2">
             {isViewer && (
               <p className="flex self-center text-xs font-bold text-red-700 opacity-80">
                 {isEdit
