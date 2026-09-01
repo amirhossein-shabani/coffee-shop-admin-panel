@@ -24,7 +24,7 @@ function Modal({ isOpen, onClose, children }) {
       {/* Backdrop */}
       <div
         onClick={onClose}
-        className="absolute inset-0 bg-black/40 backdrop-blur-sm"
+        className="absolute inset-0 bg-black/40 backdrop-blur-[2px]"
       />
 
       {/* Modal Content */}
