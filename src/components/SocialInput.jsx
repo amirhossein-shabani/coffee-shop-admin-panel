@@ -46,7 +46,7 @@ export default function SocialInput({
         placeholder={placeholder || label}
         onChange={handleChange}
         onBlur={onBlur}
-        className="w-full p-1 px-2 text-sm font-normal rounded-lg"
+        className="w-full p-1 px-2 text-sm font-normal rounded-lg bg-gray-50"
       />
     </div>
   );

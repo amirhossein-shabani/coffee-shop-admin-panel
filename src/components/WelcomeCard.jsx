@@ -1,7 +1,8 @@
 import { useNavigate } from "react-router-dom";
 
-export default function WelcomeCard({ isViewer }) {
+export default function WelcomeCard({ isViewer, userProfile }) {
   const navigate = useNavigate();
+  const { description } = userProfile || {};
 
   return (
     <div className="flex flex-col p-4 mt-4 text-center bg-white rounded-lg shadow-sm md:flex-row gap-x-10">
@@ -19,6 +20,12 @@ export default function WelcomeCard({ isViewer }) {
           </span>
         </div>
       </div>
+
+      {isViewer && (
+        <div className="w-full mt-3 text-xs py-1 text-gray-700 pr-0.5 text-start md:mt-0">
+          {description}
+        </div>
+      )}
 
       <div className="flex items-center w-full gap-2 mt-3 overflow-x-auto md:justify-center md:gap-x-4 md:mt-0">
         <button

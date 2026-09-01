@@ -10,6 +10,11 @@ export async function confirm({
     title,
     text,
     icon: "warning",
+    // make the confirmation popup smaller and apply custom class
+    width: 420,
+    customClass: {
+      popup: "swal-popup-custom",
+    },
     showCancelButton: true,
     confirmButtonText,
     cancelButtonText,
@@ -28,6 +33,10 @@ export function toastSuccess(title = "با موفقیت انجام شد") {
     toast: true,
     position: "top",
     icon: "success",
+    // use a custom popup class so we can style the toast (size, radius, padding)
+    customClass: {
+      popup: "swal-toast-custom",
+    },
     title,
     showConfirmButton: false,
     timer: 3000,
@@ -40,6 +49,9 @@ export function toastError(title = "خطا رخ داد") {
     toast: true,
     position: "top",
     icon: "error",
+    customClass: {
+      popup: "swal-toast-custom",
+    },
     title,
     showConfirmButton: false,
     timer: 3000,

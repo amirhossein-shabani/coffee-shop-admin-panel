@@ -25,7 +25,7 @@ function Sidebar() {
     <>
       <div>
         <div
-          className={`absolute m-1 rounded top-0 left-0 right-0 z-50 flex justify-between p-4 ${!isOpen && "bg-coffee-dark"} text-end md:hidden `}
+          className={`absolute m-1 mx-2 rounded top-0 left-0 right-0 z-50 flex justify-between p-4 ${!isOpen && "bg-coffee-dark"} text-end md:hidden `}
         >
           <h1
             className={`flex pt-1.5 text-2xl font-bold ${isOpen ? "text-coffee-light" : "text-coffee-light font-extrabold"}`}

@@ -194,7 +194,7 @@ function AddEditItem() {
           {/* Buttons */}
           <div className="flex justify-end gap-3 pt-2">
             {isViewer && (
-              <p className="flex self-center text-sm font-bold text-red-700 opacity-80">
+              <p className="flex self-center text-xs font-bold text-red-700 opacity-80">
                 {isEdit
                   ? "شما اجازه تغییر ایتم ها را ندارید ."
                   : " شما اجازه اضاف کردن ایتم  را ندارید ."}
@@ -202,20 +202,25 @@ function AddEditItem() {
             )}
             <button
               type="button"
-              disabled={isViewer}
               onClick={() => navigate("/menu")}
-              className="px-4 py-2 text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300 disabled:opacity-50 disabled:hover:bg-gray-200"
+              className="px-4 py-2 text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300 "
             >
               انصراف
             </button>
 
-            <button
-              type="submit"
-              disabled={isViewer}
-              className={`px-4 py-2 text-white rounded-lg bg-coffee-dark hover:opacity-90 disabled:opacity-50 `}
-            >
-              {isPending ? "درحال ذخیره ..." : isEdit ? "ذخیره" : "اضافه کردن"}
-            </button>
+            {!isViewer ? (
+              <button
+                type="submit"
+                disabled={isViewer}
+                className={`px-4 py-2 text-white rounded-lg bg-coffee-dark hover:opacity-90 disabled:opacity-50 `}
+              >
+                {isPending
+                  ? "درحال ذخیره ..."
+                  : isEdit
+                    ? "ذخیره"
+                    : "اضافه کردن"}
+              </button>
+            ) : null}
           </div>
         </form>
       </div>

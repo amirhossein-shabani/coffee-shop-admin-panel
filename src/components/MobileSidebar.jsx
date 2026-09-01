@@ -14,12 +14,12 @@ function MobileSidebar({ isOpen, logoutLoading, onClose, onLogout }) {
       {/* sidebar */}
       <aside
         className={`
-          fixed top-0 left-0 right-0 z-30 m-1 rounded 
+          fixed top-0 left-0 right-0 z-30 m-1 mx-2  rounded 
           px-6 pt-20 pb-10
           bg-coffee-dark/90 text-coffee-light
           md:hidden
 
-          transition-all duration-[600ms] ease-in-out
+          transition-all duration-[500ms] ease-in-out
 
           ${
             isOpen

@@ -2,6 +2,47 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Custom SweetAlert2 styling */
+.swal-popup-custom {
+  border-radius: 12px !important;
+  padding: 1rem !important;
+  max-width: 90% !important;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12) !important;
+}
+
+.swal-popup-custom .swal2-title {
+  font-size: 1.05rem;
+}
+
+.swal-popup-custom .swal2-content {
+  font-size: 0.95rem;
+}
+
+/* Toast customization */
+.swal-toast-custom {
+  border-radius: 10px !important;
+  padding: 0.55rem 0.9rem !important;
+  min-width: 160px !important;
+  max-width: 92% !important;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1) !important;
+}
+
+.swal-toast-custom .swal2-title {
+  font-size: 0.95rem;
+  margin: 0;
+  padding: 0;
+}
+
+/* slightly smaller icons and tighter spacing for toasts */
+.swal2-icon {
+  transform: scale(0.9);
+}
+
+/* adjust toast container placement spacing on mobile */
+.swal2-container.swal2-top {
+  padding-top: 0.6rem !important;
+}
+
 body {
   font-family: "Vazirmatn", sans-serif;
   font-weight: 400; /* وزن پیش‌فرض Regular */
