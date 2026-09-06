@@ -1,9 +1,9 @@
 function AddItemButton({ navigate }) {
   return (
-    <div className="relative group w-[30%] md:w-[8%] ">
+    <div className="relative group w-[25%] md:w-[8%] ">
       <button
         onClick={navigate}
-        className="w-full flex items-center justify-center rounded-xl border border-gray-300 bg-white text-3xl text-gray-700 scale-95 transition hover:scale-100 pt-0.5"
+        className="flex items-center justify-center w-full py-[0.10rem] text-4xl text-gray-500 transition scale-95 bg-white border border-gray-300 rounded-xl hover:scale-100 -mt-[1px]"
       >
         +
       </button>

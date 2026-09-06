@@ -5,6 +5,7 @@ import { useLogout } from "../hooks/useLogout";
 import { useProfile } from "../hooks/useProfile";
 import {
   ADMIN_ROLE,
+  SUPER_ADMIN_ROLE,
   AUTHORIZED_ROLES,
   VIEWER_ROLE,
 } from "../constants/authRoles";
@@ -21,6 +22,7 @@ export function AuthProvider({ children }) {
   const [authError, setAuthError] = useState(null);
   const [isBootstrapping, setIsBootstrapping] = useState(true);
 
+  // 👤 Fetch profile
   const {
     data: fetchedProfile,
     error: profileError,
@@ -30,6 +32,7 @@ export function AuthProvider({ children }) {
     enabled: Boolean(user?.id),
   });
 
+  // 🔐 Logout mutation
   const logoutMutation = useLogout();
 
   // 🔐 Restore session on load
@@ -93,6 +96,7 @@ export function AuthProvider({ children }) {
 
   const isAdmin = role === ADMIN_ROLE;
   const isViewer = role === VIEWER_ROLE;
+  const isSuperAdmin = role === SUPER_ADMIN_ROLE;
   const isAuthorized = AUTHORIZED_ROLES.includes(role);
 
   // ⏳ Loading state
@@ -113,7 +117,9 @@ export function AuthProvider({ children }) {
       role,
       isAdmin,
       isViewer,
+      isSuperAdmin,
       isAuthorized,
+      isProfileFetching,
 
       // loading / errors
       loading,
@@ -133,9 +139,11 @@ export function AuthProvider({ children }) {
       role,
       isAdmin,
       isViewer,
+      isSuperAdmin,
       isAuthorized,
       loading,
       profileError,
+      isProfileFetching,
       logoutMutation.mutateAsync,
       logoutMutation.error,
       logoutMutation.isPending,

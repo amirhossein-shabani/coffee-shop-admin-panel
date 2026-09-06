@@ -49,7 +49,7 @@ export const router = createBrowserRouter([
         handle: { title: "منو" },
         children: [
           {
-            path: ":id",
+            path: "edit/:id",
             element: <AddEditItem />,
           },
           {
@@ -64,7 +64,7 @@ export const router = createBrowserRouter([
         handle: { title: "دسته‌بندی‌ها" },
         children: [
           {
-            path: ":href",
+            path: "edit/:href",
             element: <AddEditCategory />,
           },
           {

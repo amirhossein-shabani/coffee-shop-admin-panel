@@ -1,5 +1,6 @@
+export const SUPER_ADMIN_ROLE = "super_admin";
 export const ADMIN_ROLE = "admin";
 export const VIEWER_ROLE = "viewer";
 
-export const ADMIN_ROLES = [ADMIN_ROLE];
-export const AUTHORIZED_ROLES = [ADMIN_ROLE, VIEWER_ROLE];
+export const ADMIN_ROLES = [ADMIN_ROLE, SUPER_ADMIN_ROLE];
+export const AUTHORIZED_ROLES = [ADMIN_ROLE, SUPER_ADMIN_ROLE, VIEWER_ROLE];

@@ -60,7 +60,7 @@ function Menu() {
         </h1>
       )}
 
-      <div className="flex flex-row w-full gap-1 px-0 pt-4 md:pt-0">
+      <div className="flex flex-row w-full gap-1 px-1.5 pt-4 md:px-4 md:pt-0">
         <SearchBar
           value={searchTerm}
           onSearch={setSearchTerm}
@@ -84,7 +84,7 @@ function Menu() {
               )}
               <div className="flex text-xl gap-x-2">
                 <button
-                  onClick={() => navigate(`/menu/${item.id}`)}
+                  onClick={() => navigate(`/menu/edit/${item.id}`)}
                   className="transition hover:text-green-500"
                 >
                   <FiEdit />
