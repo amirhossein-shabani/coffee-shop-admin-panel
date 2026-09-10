@@ -148,6 +148,10 @@ function AddEditCategory() {
             register={register}
             errors={errors}
             required={{ value: true, message: "href الزامی است" }}
+            pattern={{
+              value: /^[A-Za-z0-9_-]+$/,
+              message: "مقدار href باید به صورت انگلیسی باشد.",
+            }}
           />
 
           {/* Upload */}
@@ -172,8 +176,8 @@ function AddEditCategory() {
             {isViewer && (
               <p className="flex self-center text-xs font-bold text-red-700 opacity-80">
                 {isEdit
-                  ? "شما اجازه تغییر کتگوری ها را ندارید ."
-                  : " شما اجازه اضاف کردن کتگوری را ندارید ."}
+                  ? "شما اجازه تغییر دسته‌بندی‌ها را ندارید ."
+                  : " شما اجازه اضافه کردن دسته‌بندی را ندارید ."}
               </p>
             )}
             <button

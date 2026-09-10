@@ -4,7 +4,7 @@ function CategoriesLoading() {
       {/* عنوان صفحه */}
       <div className="w-48 h-6 bg-gray-200 rounded-md animate-pulse" />
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className="flex flex-col gap-4 md:grid md:grid-cols-2">
         {[...Array(6)].map((_, index) => (
           <div
             key={index}

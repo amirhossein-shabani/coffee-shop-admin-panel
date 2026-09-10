@@ -98,6 +98,7 @@ export const deleteMenuItemImage = async (imageUrl) => {
 
     if (listError) {
       console.error("خطا در بررسی فایل:", listError);
+      throw listError;
     }
 
     const fileExists = existingFiles?.some((file) => file.name === fileName);
@@ -250,7 +251,7 @@ export const addMenuItemWithImage = async ({
         description,
         imgUrl: newImageUrl,
         tag,
-        display_order: nextOrder, // ⭐ مهم‌ترین خط
+        display_order: nextOrder,
       })
       .select()
       .single();
@@ -279,7 +280,7 @@ export const deleteMenuItemById = async ({ id, imageUrl }) => {
       await deleteMenuItemImage(imageUrl);
     }
 
-    // then delete database record
+    //  delete database record
     const { data, error } = await supabase
       .from("menuItems")
       .delete()

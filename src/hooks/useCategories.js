@@ -31,8 +31,9 @@ export function useUpdateCategory(options = {}) {
     mutationFn: updateCategory,
 
     onSuccess: (data) => {
-      // فقط این کافیه 👇
-      queryClient.invalidateQueries(["categories"]);
+      queryClient.invalidateQueries({
+        queryKey: ["categories"],
+      });
 
       options.onSuccess?.(data);
     },
@@ -46,7 +47,9 @@ export function useAddCategory(options = {}) {
     mutationFn: addCategory,
 
     onSuccess: (data) => {
-      queryClient.invalidateQueries(["categories"]);
+      queryClient.invalidateQueries({
+        queryKey: ["categories"],
+      });
 
       options.onSuccess?.(data);
     },
@@ -60,7 +63,9 @@ export function useDeleteCategory(options = {}) {
     mutationFn: deleteCategory,
 
     onSuccess: (data) => {
-      queryClient.invalidateQueries(["categories"]);
+      queryClient.invalidateQueries({
+        queryKey: ["categories"],
+      });
       options.onSuccess?.(data);
     },
   });

@@ -62,16 +62,19 @@ export function AuthProvider({ children }) {
     restoreSession();
 
     // 🔁 Listen to auth changes
-    const subscription = onAuthStateChange((_event, nextSession) => {
-      setSession(nextSession);
-      setUser(nextSession?.user ?? null);
-      setAuthError(null);
+    const subscription = onAuthStateChange(
+      // this is the callback that will be called whenever the auth state changes (login, logout, token refresh, etc.)
+      (_event, nextSession) => {
+        setSession(nextSession);
+        setUser(nextSession?.user ?? null);
+        setAuthError(null);
 
-      if (!nextSession) {
-        setProfile(null);
-        queryClient.removeQueries({ queryKey: ["profile"] });
-      }
-    });
+        if (!nextSession) {
+          setProfile(null);
+          queryClient.removeQueries({ queryKey: ["profile"] });
+        }
+      },
+    );
 
     return () => {
       isMounted = false;

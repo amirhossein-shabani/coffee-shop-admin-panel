@@ -31,17 +31,17 @@ function Menu() {
     );
   }, [data, searchTerm]);
 
-  const deleteMenuItemMutation = useDeleteMenuItem();
+  const { mutate: deleteMenuItemMutation } = useDeleteMenuItem();
 
-  async function handleDelete(id, imageUrl) {
+  async function handleDelete(item) {
     const ok = await swalConfirm({
       title: "حذف آیتم",
       text: "آیا از حذف این آیتم مطمئن هستید؟",
     });
     if (!ok) return;
 
-    deleteMenuItemMutation.mutate(
-      { id, imageUrl },
+    deleteMenuItemMutation(
+      { id: item.id, imageUrl: item.imageUrl },
       {
         onSuccess: () => toastSuccess("آیتم با موفقیت حذف شد."),
         onError: (err) => toastError(err?.message || "خطا در حذف آیتم."),
@@ -55,8 +55,8 @@ function Menu() {
   return (
     <div className="flex flex-col w-full gap-4">
       {window.innerWidth >= 768 && (
-        <h1 className="pb-5 pr-0 text-xl font-bold text-coffee-dark/80">
-          صفحه منو
+        <h1 className="pb-5 pr-5 text-2xl font-bold text-coffee-dark/80">
+          منو
         </h1>
       )}
 
@@ -91,7 +91,7 @@ function Menu() {
                 </button>
 
                 <button
-                  onClick={() => handleDelete(item.id, item.imgUrl)}
+                  onClick={() => handleDelete(item)}
                   disabled={isViewer}
                   className="transition hover:text-red-500 disabled:opacity-50 disabled:hover:text-gray-700 disabled:cursor-not-allowed"
                 >

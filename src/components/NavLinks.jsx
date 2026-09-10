@@ -37,7 +37,7 @@ function NavLinks({ onClose }) {
         }
         onClick={() => onClose?.()}
       >
-        🗂️ کتگوری ها
+        🗂️ دسته بندی ها
       </NavLink>
       <NavLink
         to="/setting"

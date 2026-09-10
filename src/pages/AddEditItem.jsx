@@ -165,12 +165,14 @@ function AddEditItem() {
 
           {/* Tag */}
           <div className="flex flex-col gap-2">
-            <label className="text-sm font-medium">کتگوری</label>
+            <label className="text-sm font-medium">دسته بندی</label>
             <select
-              {...register("tag")}
+              {...register("tag", {
+                required: "انتخاب دسته بندی الزامی است",
+              })}
               className="px-3 py-2 border rounded-lg focus:ring-2 focus:ring-coffee-dark"
             >
-              <option value="">انتخاب کتگوری</option>
+              <option value="">انتخاب دسته بندی</option>
               {categories?.map((category) => (
                 <option key={category.id} value={category.href}>
                   {category.href}

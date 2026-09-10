@@ -35,7 +35,9 @@ export function useUpdateMenuItemWithImage(options = {}) {
 
     onSuccess: (data) => {
       // invalidate
-      queryClient.invalidateQueries(["menuItems"]);
+      queryClient.invalidateQueries({
+        queryKey: ["menuItems"],
+      });
       // invalidate individual item
       queryClient.setQueryData(["menuItem", data.id], data);
 
@@ -51,7 +53,9 @@ export function useAddMenuItemWithImage(options = {}) {
     mutationFn: addMenuItemWithImage,
 
     onSuccess: (data) => {
-      queryClient.invalidateQueries(["menuItems"]);
+      queryClient.invalidateQueries({
+        queryKey: ["menuItems"],
+      });
       options.onSuccess?.(data);
     },
   });
@@ -61,9 +65,11 @@ export function useDeleteMenuItem() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ id, imageUrl }) => deleteMenuItemById({ id, imageUrl }),
+    mutationFn: deleteMenuItemById,
     onSuccess: () => {
-      queryClient.invalidateQueries(["menuItems"]);
+      queryClient.invalidateQueries({
+        queryKey: ["menuItems"],
+      });
     },
   });
 }
@@ -74,7 +80,9 @@ export function useUpdateSuggestedItems(options = {}) {
   return useMutation({
     mutationFn: updateSuggestedItems,
     onSuccess: () => {
-      queryClient.invalidateQueries(["menuItems"]);
+      queryClient.invalidateQueries({
+        queryKey: ["menuItems"],
+      });
       options.onSuccess?.();
     },
     onError: (error) => {
@@ -90,7 +98,9 @@ export function useUpdateAvailability(options = {}) {
   return useMutation({
     mutationFn: (unavailableIds) => updateAvailability(unavailableIds),
     onSuccess: () => {
-      queryClient.invalidateQueries(["menuItems"]);
+      queryClient.invalidateQueries({
+        queryKey: ["menuItems"],
+      });
       options.onSuccess?.();
     },
     onError: (error) => {

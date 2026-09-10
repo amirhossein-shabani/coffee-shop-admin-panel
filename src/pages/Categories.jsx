@@ -20,11 +20,28 @@ function Categories() {
   if (isLoading || isDeleting) return <CategoriesLoading />;
   if (error) return <div>خطا در بارگذاری دسته‌بندی‌ها: {error.message}</div>;
 
+  // handle delete category , if the category hade a imgUrl and landingImgUrl they both deleted from database .
+  async function handleDeleteCategory(e, categoryHref) {
+    e.stopPropagation();
+
+    const ok = await swalConfirm({
+      title: "حذف دسته بندی ",
+      text: " آیا مطمئن هستید که می‌خواهید این دسته‌بندی را حذف کنید؟",
+    });
+
+    if (!ok) return;
+
+    deleteCategory(categoryHref, {
+      onSuccess: () => toastSuccess("دسته‌بندی حذف شد."),
+      onError: (err) => toastError(err?.message || "خطا در حذف دسته‌بندی."),
+    });
+  }
+
   return (
     <div className="space-y-4">
       {window.innerWidth >= 768 && (
-        <h1 className="pb-5 pr-1 text-xl font-bold text-coffee-dark/80 ">
-          صفحه دسته‌بندی‌ها
+        <h1 className="pb-5 pr-2.5 text-2xl font-bold text-coffee-dark/80 ">
+          دسته‌بندی‌ها
         </h1>
       )}
       <div className=" flex flex-col md:grid md:grid-cols-2 gap-4 scroll-container !max-h-[80vh] px-2">
@@ -32,7 +49,7 @@ function Categories() {
           onClick={() => navigate("/categories/add")}
           className="col-span-2 py-2 text-center text-gray-800 border border-gray-400 border-dotted rounded-lg bg-white/50 hover:bg-white hover:text-black hover:scale-[1.02] transition duration-300"
         >
-          اضاف کردن کتگوری <span className="text-xl"> + </span>
+          اضاف کردن دسته بندی <span className="text-xl"> + </span>
         </button>
         {data?.map((category) => (
           <div
@@ -52,21 +69,7 @@ function Categories() {
               </button>
               {/* دکمه حذف */}
               <button
-                onClick={async (e) => {
-                  e.stopPropagation();
-                  const ok = await swalConfirm({
-                    title: "حذف دسته‌بندی",
-                    text: "آیا مطمئن هستید که می‌خواهید این دسته‌بندی را حذف کنید؟",
-                  });
-
-                  if (!ok) return;
-
-                  deleteCategory(category.href, {
-                    onSuccess: () => toastSuccess("دسته‌بندی حذف شد."),
-                    onError: (err) =>
-                      toastError(err?.message || "خطا در حذف دسته‌بندی."),
-                  });
-                }}
+                onClick={(e) => handleDeleteCategory(e, category.href)}
                 disabled={isViewer}
                 className="text-gray-500 transition hover:text-red-500 disabled:opacity-50 disabled:hover:text-gray-500 disabled:cursor-not-allowed"
               >
@@ -106,7 +109,3 @@ function Categories() {
 }
 
 export default Categories;
-
-// you have to create modal which you can use on the categories and menuItems and create this modal reusable to can use in both route to show and edit the data .
-
-// write the logic for delete and create the category.
