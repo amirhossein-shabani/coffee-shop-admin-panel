@@ -55,7 +55,7 @@ function Categories() {
           <div
             onClick={() => {
               if (window.innerWidth >= 768)
-                navigate(`/categories/${category.href}`);
+                navigate(`/categories/edit/${category.href}`);
             }}
             key={category.id}
             className="relative group flex items-center justify-between p-4 transition bg-white shadow rounded-xl hover:scale-[1.02] hover:shadow-md"

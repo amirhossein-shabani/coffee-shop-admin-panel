@@ -67,7 +67,7 @@ function FileUpload({
             <img
               src={preview}
               alt="preview"
-              className="object-cover w-full h-full rounded-xl"
+              className="object-contain w-[100%] h-[100%] rounded-xl"
               loading="lazy"
               decoding="async"
             />
