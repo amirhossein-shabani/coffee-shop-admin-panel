@@ -61,8 +61,8 @@ function AddEditCategory() {
   }, [category, reset, isEdit]);
 
   const onSubmit = (formData) => {
-    const imageFile = formData.imgUrl?.[0];
-    const landingImageFile = formData.landingImageUrl?.[0];
+    const imageFile = formData.imageFile?.[0];
+    const landingImageFile = formData.landingImageFile?.[0];
     if (isEdit) {
       // ویرایش دسته‌بندی
       const oldImgageUrl = category?.imgUrl || null;
@@ -72,6 +72,8 @@ function AddEditCategory() {
         imgUrl: category?.imgUrl,
         landingImageUrl: category?.landingImageUrl,
       };
+      delete payload.imageFile;
+      delete payload.landingImageFile;
       updateCategory({
         id: category.id,
         updateCategoryData: payload,
@@ -158,7 +160,7 @@ function AddEditCategory() {
           <FileUpload
             label="آیکون دسته بندی "
             register={register}
-            name="imgUrl"
+            name="imageFile"
             defaultImage={category?.imgUrl || null}
             onPreviewChange={setPreview}
           />
@@ -167,7 +169,7 @@ function AddEditCategory() {
           <FileUpload
             label="تصویر دسته بندی  "
             register={register}
-            name="landingImageUrl"
+            name="landingImageFile"
             defaultImage={category?.landingImageUrl || null}
           />
 

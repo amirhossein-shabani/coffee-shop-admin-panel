@@ -62,12 +62,13 @@ function AddEditItem() {
   }, [isEdit, item, reset]);
 
   const onSubmit = (formData) => {
-    const imageFile = formData.imgUrl?.[0]; // فایل جدید، اگر انتخاب شده
+    const imageFile = formData.imageFile?.[0];
 
     const normalizedData = {
       ...formData,
       tag: formData.tag || null,
     };
+    delete normalizedData.imageFile;
 
     if (isEdit) {
       const oldImageUrl = item?.imgUrl || null; // کل URL فعلی از دیتابیس
@@ -188,7 +189,7 @@ function AddEditItem() {
           <FileUpload
             label="تصویر محصول"
             register={register}
-            name="imgUrl"
+            name="imageFile"
             defaultImage={isEdit ? item?.imgUrl : null}
             onPreviewChange={setPreview}
           />
