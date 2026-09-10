@@ -2,11 +2,11 @@ import { useNavigate } from "react-router-dom";
 
 export default function WelcomeCard({ isViewer, userProfile }) {
   const navigate = useNavigate();
-  const { description } = userProfile || {};
+  const { description, userName } = userProfile || {};
 
   return (
     <div className="flex flex-col p-4 mt-4 text-center bg-white rounded-lg shadow-sm md:flex-row gap-x-10">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between mb-1">
         <div className="flex items-center gap-3 ">
           <span className="mr-1 text-sm text-gray-700">نقش:</span>
           <span
@@ -16,7 +16,7 @@ export default function WelcomeCard({ isViewer, userProfile }) {
                 : "bg-green-100 text-green-800"
             }`}
           >
-            {isViewer ? "بیننده" : "ادمین"}
+            {userName}
           </span>
         </div>
       </div>

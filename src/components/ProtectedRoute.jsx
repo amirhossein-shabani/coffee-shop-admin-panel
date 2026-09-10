@@ -18,7 +18,7 @@ function ProtectedRoute({ allowedRoles, children }) {
     return <Navigate to="/login" replace state={{ from: location }} />;
   }
 
-  // 🔐 role check (admin + viewer supported)
+  // 🔐 role check (super_admin + admin + viewer supported)
   const role = profile?.role ?? "none";
 
   if (allowedRoles?.length && !allowedRoles.includes(role)) {
