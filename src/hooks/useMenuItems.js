@@ -23,7 +23,7 @@ export function useMenuItem(id) {
     queryKey: ["menuItem", id],
     queryFn: () => getMenuItemById(id),
     enabled: !!id,
-    staleTime: 0,
+    staleTime: 60 * 60 * 1000,
   });
 }
 
